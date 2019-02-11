@@ -1,7 +1,8 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, h1, input, section, text)
+import Html.Attributes exposing (class, type_)
 import Html.Events exposing (onClick)
 
 
@@ -25,7 +26,19 @@ update msg model =
 
 view model =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model) ]
-        , button [ onClick Increment ] [ text "+" ]
+        [ section [ class "hero is-info" ]
+            [ div [ class "hero-body" ]
+                [ div [ class "container" ]
+                    [ h1 [ class "title" ] [ text "超シンプル家計簿" ] ]
+                ]
+            ]
+        , section [ class "section" ]
+            [ div [ class "container" ]
+                [ div [ class "field has-addons" ]
+                    [ div [ class "control" ]
+                        [ input [ class "input", type_ "text" ] [] ]
+                    , div [ class "control" ] [ button [ class "button is-info" ] [ text "登録" ] ]
+                    ]
+                ]
+            ]
         ]
