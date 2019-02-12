@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), hello, jsHello, main, update)
+port module Main exposing (Msg(..), hello, jsHello, login, main, store, update)
 
 import Browser
 import Html exposing (button, div, h1, h2, i, input, section, text)
@@ -36,6 +36,7 @@ type Msg
     | PutSpend String
     | GotNested String
     | PortTest String
+    | ClickedLogin String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -60,6 +61,9 @@ update msg model =
         PortTest text ->
             ( { model | spendInput = text }, store text )
 
+        ClickedLogin text ->
+            ( { model | spendInput = text }, login text )
+
 
 
 -- Cmd
@@ -69,6 +73,9 @@ port hello : String -> Cmd msg
 
 
 port store : String -> Cmd msg
+
+
+port login : String -> Cmd msg
 
 
 
@@ -100,7 +107,7 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info" ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
+                , button [ class "button is-info", onClick (ClickedLogin "test") ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]
