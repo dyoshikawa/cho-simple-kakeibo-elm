@@ -1,8 +1,8 @@
-port module Main exposing (Msg(..), auth, hello, jsHello, login, main, store, update)
+port module Main exposing (Msg(..), auth, hello, jsUid, login, main, putSpend, store, update)
 
 import Browser
 import Html exposing (button, div, h1, h2, i, input, section, text)
-import Html.Attributes exposing (class, placeholder, type_)
+import Html.Attributes exposing (class, id, placeholder, type_)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -18,13 +18,19 @@ type alias Nested =
     { value : String }
 
 
+type Status
+    = Loggedin
+    | NotLoggedin
+    | Loading
+
+
 type alias Model =
-    { spendInput : String, nested : Nested }
+    { spendInput : String, uid : String, status : Status }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Nested ""), auth () )
+    ( Model "" "" Loggedin, auth () )
 
 
 port auth : () -> Cmd msg
@@ -36,10 +42,11 @@ port auth : () -> Cmd msg
 
 type Msg
     = DoneInput String
-    | PutSpend String
-    | GotNested String
+    | ClickedPutSpend String
+    | CompletedPutSpend ()
     | PortTest String
     | ClickedLogin
+    | GotUid String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,24 +55,20 @@ update msg model =
         DoneInput value ->
             ( { model | spendInput = value }, Cmd.none )
 
-        PutSpend value ->
-            ( { model | spendInput = value }, Cmd.none )
+        ClickedPutSpend value ->
+            ( model, putSpend (PutSpendData model.uid model.spendInput) )
 
-        GotNested text ->
-            let
-                oldNested =
-                    model.nested
-
-                newNested =
-                    { oldNested | value = text }
-            in
-            ( { model | nested = newNested }, Cmd.none )
+        CompletedPutSpend () ->
+            ( { model | spendInput = "" }, Cmd.none )
 
         PortTest text ->
             ( { model | spendInput = text }, store text )
 
         ClickedLogin ->
             ( { model | spendInput = "" }, login () )
+
+        GotUid value ->
+            ( { model | uid = value, status = Loggedin }, Cmd.none )
 
 
 
@@ -81,16 +84,26 @@ port store : String -> Cmd msg
 port login : () -> Cmd msg
 
 
+type alias PutSpendData =
+    { uid : String, spend : String }
+
+
+port putSpend : PutSpendData -> Cmd msg
+
+
 
 -- Sub
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    jsHello GotNested
+    Sub.batch [ jsUid GotUid, jsCompletedPutSpend CompletedPutSpend ]
 
 
-port jsHello : (String -> msg) -> Sub msg
+port jsUid : (String -> msg) -> Sub msg
+
+
+port jsCompletedPutSpend : (() -> msg) -> Sub msg
 
 
 
@@ -110,15 +123,15 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info", onClick ClickedLogin ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
+                , button [ class "button is-info", onClick ClickedLogin ] [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
-                        [ input [ class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
-                    , div [ class "control" ] [ button [ class "button is-info", onClick (PutSpend model.spendInput) ] [ text "登録" ] ]
+                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
+                    , div [ class "control" ] [ button [ class "button is-info", onClick (ClickedPutSpend model.spendInput) ] [ text "登録" ] ]
                     ]
                 , button [ onClick (PortTest "test") ] [ text "test" ]
                 ]

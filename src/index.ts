@@ -42,18 +42,25 @@ app.ports.auth.subscribe(() => {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       console.log(user)
+      app.ports.jsUid.send(user.uid)
     } else {
       console.log('You are guest.')
     }
   })
 })
 
-//ElmからJSへはsubscribe
-// app.ports.hello.subscribe(function(fromElm) {
-//   console.log(fromElm)
-//   //JSからElmへはsend
-//   app.ports.jsHello.send('Hi!')
-// })
-
-// //JSからElmへsend
-// app.ports.jsHello.send('Elm! hellooooo')
+app.ports.putSpend.subscribe(async (value: { uid: string; spend: string }) => {
+  console.log('putSpend')
+  console.log(value)
+  await firebase
+    .firestore()
+    .collection('items')
+    .add({
+      price: value.spend,
+      userUid: value.uid,
+      createdAt: 'test',
+    })
+  const el = document.querySelector('#spendInput') as HTMLInputElement
+  el.value = ''
+  app.ports.jsCompletedPutSpend.send(null)
+})
