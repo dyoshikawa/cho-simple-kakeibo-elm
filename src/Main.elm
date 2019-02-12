@@ -36,7 +36,7 @@ type Msg
     | PutSpend String
     | GotNested String
     | PortTest String
-    | ClickedLogin String
+    | ClickedLogin
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -61,8 +61,8 @@ update msg model =
         PortTest text ->
             ( { model | spendInput = text }, store text )
 
-        ClickedLogin text ->
-            ( { model | spendInput = text }, login text )
+        ClickedLogin ->
+            ( { model | spendInput = "" }, login () )
 
 
 
@@ -75,7 +75,7 @@ port hello : String -> Cmd msg
 port store : String -> Cmd msg
 
 
-port login : String -> Cmd msg
+port login : () -> Cmd msg
 
 
 
@@ -107,7 +107,7 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info", onClick (ClickedLogin "test") ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
+                , button [ class "button is-info", onClick ClickedLogin ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]

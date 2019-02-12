@@ -37,6 +37,16 @@ app.ports.store.subscribe(count => {
     })
 })
 
+app.ports.auth.subscribe(text => {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      console.log(user)
+    } else {
+      console.log('You are guest.')
+    }
+  })
+})
+
 //ElmからJSへはsubscribe
 // app.ports.hello.subscribe(function(fromElm) {
 //   console.log(fromElm)
