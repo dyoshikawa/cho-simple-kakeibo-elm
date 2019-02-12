@@ -37,6 +37,31 @@ app.ports.auth.subscribe(() => {
   })
 })
 
+app.ports.fetchItems.subscribe((uid: string) => {
+  firebase
+    .firestore()
+    .collection('items')
+    .where('userUid', '==', uid)
+    .onSnapshot(snapShot => {
+      const items: {
+        price: number
+        userUid: string
+        createdAt: string
+      }[] = snapShot.docs.map(doc => ({
+        id: doc.id,
+        price: doc.data().price as number,
+        userUid: doc.data().userUid as string,
+        createdAt: doc.data().createdAt as string,
+      }))
+      items.sort((a, b) => {
+        if (a.createdAt > b.createdAt) return -1
+        if (a.createdAt < b.createdAt) return 1
+        return 0
+      })
+      app.ports.jsGotItems.send(items)
+    })
+})
+
 app.ports.putSpend.subscribe(async (value: { uid: string; spend: string }) => {
   console.log('putSpend')
   console.log(value)

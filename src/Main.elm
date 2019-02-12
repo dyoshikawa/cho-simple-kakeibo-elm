@@ -46,6 +46,7 @@ type Msg
     | CompletedPutSpend ()
     | ClickedLogin
     | GotUid String
+    | StartedFetchItems String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -66,6 +67,9 @@ update msg model =
         GotUid value ->
             ( { model | uid = value, status = Loggedin }, Cmd.none )
 
+        StartedFetchItems uid ->
+            ( model, fetchItems uid )
+
 
 
 -- Cmd
@@ -81,16 +85,26 @@ type alias PutSpendData =
 port putSpend : PutSpendData -> Cmd msg
 
 
+port fetchItems : String -> Cmd msg
+
+
 
 -- Sub
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsUid GotUid, jsCompletedPutSpend CompletedPutSpend ]
+    Sub.batch [ jsGotUid GotUid, jsCompletedPutSpend CompletedPutSpend ]
 
 
 port jsGotUid : (String -> msg) -> Sub msg
+
+
+type alias SpendItem =
+    { id : String, price : Int, createdAt : String }
+
+
+port jsCompletedFetchItems : (String -> msg) -> Sub msg
 
 
 port jsCompletedPutSpend : (() -> msg) -> Sub msg
