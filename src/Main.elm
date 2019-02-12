@@ -10,6 +10,10 @@ main =
     Browser.sandbox { init = init, update = update, view = view }
 
 
+
+-- MODEL
+
+
 type alias Nested =
     { value : String }
 
@@ -21,6 +25,10 @@ type alias Model =
 init : Model
 init =
     Model (Nested "")
+
+
+
+-- UPDATE
 
 
 type Msg
@@ -38,6 +46,10 @@ update msg model =
                     { oldNested | value = text }
             in
             { model | nested = newNested }
+
+
+
+-- VIEW
 
 
 view model =
