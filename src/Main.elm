@@ -7,21 +7,37 @@ import Html.Events exposing (onClick)
 
 
 main =
-    Browser.sandbox { init = 0, update = update, view = view }
+    Browser.sandbox { init = init, update = update, view = view }
+
+
+type alias Nested =
+    { value : String }
+
+
+type alias Model =
+    { nested : Nested }
+
+
+init : Model
+init =
+    Model (Nested "")
 
 
 type Msg
-    = Increment
-    | Decrement
+    = GotNested String
 
 
 update msg model =
     case msg of
-        Increment ->
-            model + 1
+        GotNested text ->
+            let
+                oldNested =
+                    model.nested
 
-        Decrement ->
-            model - 1
+                newNested =
+                    { oldNested | value = text }
+            in
+            { model | nested = newNested }
 
 
 view model =
