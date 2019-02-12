@@ -20,21 +20,13 @@ const app = Elm.Main.init({
   node: document.getElementById('root'),
 })
 
-// firebase
-//   .firestore()
-//   .ref('count')
-//   .on('value', snap => {
-//     const count = snap.val()
-//     app.ports.load.send(count)
-//     console.log(`load the counter: ${count}`)
-//   })
-
 app.ports.login.subscribe(text => {
   console.log('login')
   firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
 })
 
 app.ports.store.subscribe(count => {
+  console.log('store')
   firebase
     .firestore()
     .collection('items')
@@ -43,7 +35,6 @@ app.ports.store.subscribe(count => {
       userUid: 'uid',
       createdAt: 'test',
     })
-  console.log(`store the counter: ${count}`)
 })
 
 //ElmからJSへはsubscribe
