@@ -1,4 +1,4 @@
-module Main exposing (Msg(..), main, update, view)
+port module Main exposing (Msg(..), main, update, view)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, input, section, text)
@@ -7,7 +7,7 @@ import Html.Events exposing (onClick, onInput)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element { init = init, subscriptions = subscriptions, update = update, view = view }
 
 
 
@@ -22,10 +22,12 @@ type alias Model =
     { spendInput : String, nested : Nested }
 
 
-init : Model
-init =
-    Nested ""
-        |> Model ""
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( Model "" (Nested ""), Cmd.none )
+
+
+port jsHello : String -> Cmd msg
 
 
 
@@ -36,15 +38,17 @@ type Msg
     = DoneInput String
     | PutSpend String
     | GotNested String
+    | PortTest String
 
 
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         DoneInput value ->
-            { model | spendInput = value }
+            ( { model | spendInput = value }, Cmd.none )
 
         PutSpend value ->
-            { model | spendInput = value }
+            ( { model | spendInput = value }, Cmd.none )
 
         GotNested text ->
             let
@@ -54,7 +58,20 @@ update msg model =
                 newNested =
                     { oldNested | value = text }
             in
-            { model | nested = newNested }
+            ( { model | nested = newNested }, Cmd.none )
+
+        PortTest text ->
+            jsHello text
+                ( { model | spendInput = text }, Cmd.none )
+
+
+
+-- SUBSCRIPTION
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
 
 
 
