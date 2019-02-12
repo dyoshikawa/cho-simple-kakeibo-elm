@@ -1,4 +1,3 @@
-import { Elm } from './Main.elm'
 import firebase from 'firebase'
 import 'bulma'
 import '@fortawesome/fontawesome'
@@ -16,7 +15,9 @@ const config = {
 }
 firebase.initializeApp(config)
 
-const app = Elm.Main.init({
+const elm: any = require('./Main.elm')
+
+const app = elm.Elm.Main.init({
   node: document.getElementById('root'),
 })
 
