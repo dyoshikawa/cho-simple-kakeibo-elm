@@ -27,13 +27,17 @@ const app = Elm.Main.init({
 //     console.log(`load the counter: ${count}`)
 //   })
 
-// app.ports.store.subscribe(count => {
-//   firebase
-//     .database()
-//     .ref('count')
-//     .set(count)
-//   console.log(`store the counter: ${count}`)
-// })
+app.ports.store.subscribe(count => {
+  firebase
+    .firestore()
+    .collection('items')
+    .add({
+      price: 100,
+      userUid: 'uid',
+      createdAt: 'test',
+    })
+  console.log(`store the counter: ${count}`)
+})
 
 //ElmからJSへはsubscribe
 app.ports.hello.subscribe(function(fromElm) {
@@ -42,5 +46,5 @@ app.ports.hello.subscribe(function(fromElm) {
   app.ports.jsHello.send('Hi!')
 })
 
-//JSからElmへsend
-app.ports.jsHello.send('Elm! hellooooo')
+// //JSからElmへsend
+// app.ports.jsHello.send('Elm! hellooooo')

@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), main, update, view)
+port module Main exposing (Msg(..), hello, jsHello, main, update)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, input, section, text)
@@ -27,7 +27,10 @@ init _ =
     ( Model "" (Nested ""), Cmd.none )
 
 
-port jsHello : String -> Cmd msg
+port hello : String -> Cmd msg
+
+
+port store : String -> Cmd msg
 
 
 
@@ -61,7 +64,7 @@ update msg model =
             ( { model | nested = newNested }, Cmd.none )
 
         PortTest text ->
-            ( { model | spendInput = text }, jsHello text )
+            ( { model | spendInput = text }, store text )
 
 
 
@@ -69,8 +72,11 @@ update msg model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions model =
+    jsHello GotNested
+
+
+port jsHello : (String -> msg) -> Sub msg
 
 
 
@@ -100,6 +106,7 @@ view model =
                     , div [ class "control" ] [ button [ class "button is-info", onClick (PutSpend model.spendInput) ] [ text "登録" ] ]
                     ]
                 ]
+            , button [ onClick (PortTest "test") ] [ text "test" ]
             ]
         , section [ class "section" ]
             [ div [ class "container" ]
