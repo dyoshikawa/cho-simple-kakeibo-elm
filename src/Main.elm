@@ -1,7 +1,7 @@
 port module Main exposing (Msg(..), hello, jsHello, main, update)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, input, section, text)
+import Html exposing (button, div, h1, h2, i, input, section, text)
 import Html.Attributes exposing (class, placeholder, type_)
 import Html.Events exposing (onClick, onInput)
 
@@ -100,7 +100,7 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info" ] [ text "Googleログイン" ]
+                , button [ class "button is-info" ] [ i [ class "fa-google fab" ] [], text "&nbsp", text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]
@@ -110,8 +110,8 @@ view model =
                         [ input [ class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
                     , div [ class "control" ] [ button [ class "button is-info", onClick (PutSpend model.spendInput) ] [ text "登録" ] ]
                     ]
+                , button [ onClick (PortTest "test") ] [ text "test" ]
                 ]
-            , button [ onClick (PortTest "test") ] [ text "test" ]
             ]
         , section [ class "section" ]
             [ div [ class "container" ]

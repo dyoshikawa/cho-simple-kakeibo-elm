@@ -1,6 +1,10 @@
 import { Elm } from './Main.elm'
 import firebase from 'firebase'
 import 'bulma'
+import '@fortawesome/fontawesome'
+import '@fortawesome/fontawesome-free-solid'
+import '@fortawesome/fontawesome-free-regular'
+import '@fortawesome/fontawesome-free-brands'
 
 const config = {
   apiKey: 'AIzaSyBsJBMFYIR_kN9dC1rdoLhRz41Xehe3aUo',
@@ -26,6 +30,10 @@ const app = Elm.Main.init({
 //     app.ports.load.send(count)
 //     console.log(`load the counter: ${count}`)
 //   })
+
+app.ports.login.subscribe(() => {
+  firebase.auth().signInWithRedirect(new auth.GoogleAuthProvider())
+})
 
 app.ports.store.subscribe(count => {
   firebase
