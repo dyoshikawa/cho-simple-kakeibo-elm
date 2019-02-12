@@ -61,8 +61,7 @@ update msg model =
             ( { model | nested = newNested }, Cmd.none )
 
         PortTest text ->
-            jsHello text
-                ( { model | spendInput = text }, Cmd.none )
+            ( { model | spendInput = text }, jsHello text )
 
 
 
