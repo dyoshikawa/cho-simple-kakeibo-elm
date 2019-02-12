@@ -100,6 +100,7 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
+                , button [ class "button is-info" ] [ text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]
