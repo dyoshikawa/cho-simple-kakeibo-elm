@@ -20,12 +20,12 @@ const app = Elm.Main.init({
   node: document.getElementById('root'),
 })
 
-app.ports.login.subscribe(text => {
+app.ports.login.subscribe(() => {
   console.log('login')
   firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
 })
 
-app.ports.store.subscribe(count => {
+app.ports.store.subscribe(text => {
   console.log('store')
   firebase
     .firestore()
@@ -37,7 +37,7 @@ app.ports.store.subscribe(count => {
     })
 })
 
-app.ports.auth.subscribe(text => {
+app.ports.auth.subscribe(() => {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       console.log(user)

@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), hello, jsHello, login, main, store, update)
+port module Main exposing (Msg(..), auth, hello, jsHello, login, main, store, update)
 
 import Browser
 import Html exposing (button, div, h1, h2, i, input, section, text)
@@ -24,7 +24,10 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Nested ""), Cmd.none )
+    ( Model "" (Nested ""), auth () )
+
+
+port auth : () -> Cmd msg
 
 
 
