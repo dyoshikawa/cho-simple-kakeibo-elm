@@ -26,23 +26,11 @@ app.ports.login.subscribe(() => {
   firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
 })
 
-app.ports.store.subscribe(text => {
-  console.log('store')
-  firebase
-    .firestore()
-    .collection('items')
-    .add({
-      price: 100,
-      userUid: 'uid',
-      createdAt: 'test',
-    })
-})
-
 app.ports.auth.subscribe(() => {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       console.log(user)
-      app.ports.jsUid.send(user.uid)
+      app.ports.jsGotUid.send(user.uid)
     } else {
       console.log('You are guest.')
     }

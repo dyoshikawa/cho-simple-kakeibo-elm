@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, hello, jsUid, login, main, putSpend, store, update)
+port module Main exposing (Msg(..), auth, jsGotUid, login, main, putSpend, update)
 
 import Browser
 import Html exposing (button, div, h1, h2, i, input, section, text)
@@ -44,7 +44,6 @@ type Msg
     = DoneInput String
     | ClickedPutSpend String
     | CompletedPutSpend ()
-    | PortTest String
     | ClickedLogin
     | GotUid String
 
@@ -61,9 +60,6 @@ update msg model =
         CompletedPutSpend () ->
             ( { model | spendInput = "" }, Cmd.none )
 
-        PortTest text ->
-            ( { model | spendInput = text }, store text )
-
         ClickedLogin ->
             ( { model | spendInput = "" }, login () )
 
@@ -73,12 +69,6 @@ update msg model =
 
 
 -- Cmd
-
-
-port hello : String -> Cmd msg
-
-
-port store : String -> Cmd msg
 
 
 port login : () -> Cmd msg
@@ -100,7 +90,7 @@ subscriptions model =
     Sub.batch [ jsUid GotUid, jsCompletedPutSpend CompletedPutSpend ]
 
 
-port jsUid : (String -> msg) -> Sub msg
+port jsGotUid : (String -> msg) -> Sub msg
 
 
 port jsCompletedPutSpend : (() -> msg) -> Sub msg
@@ -133,7 +123,7 @@ view model =
                         [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
                     , div [ class "control" ] [ button [ class "button is-info", onClick (ClickedPutSpend model.spendInput) ] [ text "登録" ] ]
                     ]
-                , button [ onClick (PortTest "test") ] [ text "test" ]
+                , button [] [ text "test" ]
                 ]
             ]
         , section [ class "section" ]
