@@ -27,12 +27,6 @@ init _ =
     ( Model "" (Nested ""), Cmd.none )
 
 
-port hello : String -> Cmd msg
-
-
-port store : String -> Cmd msg
-
-
 
 -- UPDATE
 
@@ -68,7 +62,17 @@ update msg model =
 
 
 
--- SUBSCRIPTION
+-- Cmd
+
+
+port hello : String -> Cmd msg
+
+
+port store : String -> Cmd msg
+
+
+
+-- Sub
 
 
 subscriptions : Model -> Sub Msg
