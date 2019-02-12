@@ -3,7 +3,7 @@ module Main exposing (Msg(..), main, update, view)
 import Browser
 import Html exposing (Html, button, div, h1, h2, input, section, text)
 import Html.Attributes exposing (class, placeholder, type_)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 
 
 main =
@@ -19,12 +19,13 @@ type alias Nested =
 
 
 type alias Model =
-    { nested : Nested }
+    { spendInput : String, nested : Nested }
 
 
 init : Model
 init =
-    Model (Nested "")
+    Nested ""
+        |> Model ""
 
 
 
@@ -32,11 +33,19 @@ init =
 
 
 type Msg
-    = GotNested String
+    = DoneInput String
+    | PutSpend String
+    | GotNested String
 
 
 update msg model =
     case msg of
+        DoneInput value ->
+            { model | spendInput = value }
+
+        PutSpend value ->
+            { model | spendInput = value }
+
         GotNested text ->
             let
                 oldNested =
@@ -71,8 +80,8 @@ view model =
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
-                        [ input [ class "input", type_ "text", placeholder "支出金額" ] [] ]
-                    , div [ class "control" ] [ button [ class "button is-info" ] [ text "登録" ] ]
+                        [ input [ class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
+                    , div [ class "control" ] [ button [ class "button is-info", onClick (PutSpend model.spendInput) ] [ text "登録" ] ]
                     ]
                 ]
             ]
