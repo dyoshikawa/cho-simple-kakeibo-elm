@@ -24,13 +24,17 @@ type Status
     | Loading
 
 
+type alias SpendItem =
+    { id : String, price : Int, createdAt : String }
+
+
 type alias Model =
-    { spendInput : String, uid : String, status : Status }
+    { spendInput : String, uid : String, status : Status, spendItems : List SpendItem }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" "" Loggedin, auth () )
+    ( Model "" "" Loggedin [], auth () )
 
 
 port auth : () -> Cmd msg
@@ -108,10 +112,6 @@ port jsCompletedFetchItems : (String -> msg) -> Sub msg
 
 
 port jsCompletedPutSpend : (() -> msg) -> Sub msg
-
-
-type alias SpendItem =
-    { id : String, price : Int, createdAt : String }
 
 
 port jsGotItems : (List SpendItem -> msg) -> Sub msg
