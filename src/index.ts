@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import moment from 'moment'
 import 'bulma'
 import '@fortawesome/fontawesome'
 import '@fortawesome/fontawesome-free-solid'
@@ -38,6 +39,7 @@ app.ports.auth.subscribe(() => {
 })
 
 app.ports.fetchItems.subscribe((uid: string) => {
+  console.log('fetchItems')
   firebase
     .firestore()
     .collection('items')
@@ -58,6 +60,7 @@ app.ports.fetchItems.subscribe((uid: string) => {
         if (a.createdAt < b.createdAt) return 1
         return 0
       })
+      console.log(items)
       app.ports.jsGotItems.send(items)
     })
 })
@@ -69,9 +72,9 @@ app.ports.putSpend.subscribe(async (value: { uid: string; spend: string }) => {
     .firestore()
     .collection('items')
     .add({
-      price: value.spend,
+      price: Number(value.spend),
       userUid: value.uid,
-      createdAt: 'test',
+      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
     })
   const el = document.querySelector('#spendInput') as HTMLInputElement
   el.value = ''

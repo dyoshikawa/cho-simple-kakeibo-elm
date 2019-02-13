@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, jsGotUid, login, main, putSpend, update)
+port module Main exposing (Msg(..), auth, jsGotItems, jsGotUid, login, main, putSpend, update)
 
 import Browser
 import Html exposing (button, div, h1, h2, i, input, section, text)
@@ -47,6 +47,7 @@ type Msg
     | ClickedLogin
     | GotUid String
     | StartedFetchItems String
+    | GotItems (List SpendItem)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -64,11 +65,14 @@ update msg model =
         ClickedLogin ->
             ( { model | spendInput = "" }, login () )
 
-        GotUid value ->
-            ( { model | uid = value, status = Loggedin }, Cmd.none )
+        GotUid uid ->
+            ( { model | uid = uid, status = Loggedin }, fetchItems uid )
 
         StartedFetchItems uid ->
             ( model, fetchItems uid )
+
+        GotItems val ->
+            ( model, Cmd.none )
 
 
 
@@ -94,20 +98,23 @@ port fetchItems : String -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsGotUid GotUid, jsCompletedPutSpend CompletedPutSpend ]
+    Sub.batch [ jsGotUid GotUid, jsCompletedPutSpend CompletedPutSpend, jsGotItems GotItems ]
 
 
 port jsGotUid : (String -> msg) -> Sub msg
-
-
-type alias SpendItem =
-    { id : String, price : Int, createdAt : String }
 
 
 port jsCompletedFetchItems : (String -> msg) -> Sub msg
 
 
 port jsCompletedPutSpend : (() -> msg) -> Sub msg
+
+
+type alias SpendItem =
+    { id : String, price : Int, createdAt : String }
+
+
+port jsGotItems : (List SpendItem -> msg) -> Sub msg
 
 
 
