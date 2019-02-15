@@ -75,8 +75,8 @@ update msg model =
         StartedFetchItems uid ->
             ( model, fetchItems uid )
 
-        GotItems val ->
-            ( model, Cmd.none )
+        GotItems items ->
+            ( { model | spendItems = items }, Cmd.none )
 
 
 
@@ -156,5 +156,14 @@ view model =
                         ]
                     ]
                 ]
+            ]
+        ]
+
+
+spendItemCards a =
+    div [ class "card" ]
+        [ div [ class "card-content" ]
+            [ div [ class "content" ]
+                [ text "test" ]
             ]
         ]
