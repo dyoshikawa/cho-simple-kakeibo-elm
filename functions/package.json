@@ -1,19 +1,22 @@
 {
   "name": "functions",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --noEmit && parcel build ./src/index.ts --target=node",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "clean": "rm -rf .cache dist"
   },
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "dependencies": {
-    "firebase-admin": "~7.0.0",
-    "firebase-functions": "^2.2.0"
+    "firebase-admin": "^7.0.0",
+    "firebase-functions": "^2.2.0",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
+    "@types/moment": "^2.13.0",
     "parcel-bundler": "^1.11.0",
     "prettier": "^1.16.4",
     "typescript": "^3.2.2"
