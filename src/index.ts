@@ -1,10 +1,7 @@
 import firebase from 'firebase'
 import moment from 'moment'
 import 'bulma'
-import '@fortawesome/fontawesome'
-import '@fortawesome/fontawesome-free-solid'
-import '@fortawesome/fontawesome-free-regular'
-import '@fortawesome/fontawesome-free-brands'
+import 'material-icons/iconfont/material-icons.scss'
 
 const config = {
   apiKey: 'AIzaSyBsJBMFYIR_kN9dC1rdoLhRz41Xehe3aUo',
