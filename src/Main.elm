@@ -1,8 +1,8 @@
 port module Main exposing (Msg(..), auth, jsGotItems, jsGotUid, login, main, putSpend, update)
 
 import Browser
-import Html exposing (button, div, h1, h2, i, input, section, text)
-import Html.Attributes exposing (class, id, placeholder, type_)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -149,21 +149,31 @@ view model =
             ]
         , section [ class "section" ]
             [ div [ class "container" ]
-                [ div [ class "card" ]
-                    [ div [ class "card-content" ]
-                        [ div [ class "content" ]
-                            [ text "test" ]
+                (spendItemCards
+                    model.spendItems
+                )
+            ]
+        ]
+
+
+viewInput : String -> String -> String -> (String -> msg) -> Html msg
+viewInput t p v toMsg =
+    input [ type_ t, placeholder p, value v, onInput toMsg ] []
+
+
+spendItemCards : List SpendItem -> List (Html msg)
+spendItemCards items =
+    List.map
+        (\item ->
+            div [ class "card" ]
+                [ div [ class "card-content" ]
+                    [ div [ class "content" ]
+                        [ div []
+                            [ p [ class "title" ]
+                                [ text (String.fromInt item.price ++ "円") ]
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]
-
-
-spendItemCards a =
-    div [ class "card" ]
-        [ div [ class "card-content" ]
-            [ div [ class "content" ]
-                [ text "test" ]
-            ]
-        ]
+        )
+        items
