@@ -36,7 +36,7 @@ spendItemsApp.get('/', async (req, res) => {
   res.send(decodedToken)
 
   const db = admin.firestore()
-  req.body.db.collection('items').add({
+  db.collection('items').add({
     price: Number(req.body.price),
     userUid: req.body.uid,
     createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
