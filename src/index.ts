@@ -31,7 +31,8 @@ app.ports.auth.subscribe(() => {
     if (user) {
       console.log(user)
       const idToken = await user.getIdToken()
-      app.ports.jsGotUid.send({ uid: user.uid, idToken: idToken })
+      console.log(idToken)
+      app.ports.jsGotMe.send({ uid: user.uid, idToken: idToken })
     } else {
       console.log('You are guest.')
     }

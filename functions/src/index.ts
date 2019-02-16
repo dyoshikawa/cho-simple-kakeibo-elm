@@ -1,21 +1,49 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import moment from 'moment'
-import corsBase from 'cors'
+import express from 'express'
+import cors from 'cors'
 
-const cors = corsBase({ origin: true })
+admin.initializeApp()
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-  //   const db = admin.firestore()
-  //   request.body.db.collection('items').add({
-  //     price: Number(request.body.price),
-  //     userUid: request.body.uid,
-  //     createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
-  //   })
-  cors(request, response, () => {
-    response.send('Hello from Firebase!')
+const spendItemsApp = express()
+spendItemsApp.use(
+  cors({
+    origin: true,
+    methods: ['GET', 'PUT', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   })
+)
+
+spendItemsApp.get('/', async (req, res) => {
+  const authorization = req.get('Authorization')
+  if (authorization == null) {
+    res.send({ errors: ['Invalid authenticated.'] })
+    return
+  }
+
+  const idToken = authorization.split('Bearer ')[1]
+
+  const decodedToken = await admin
+    .auth()
+    .verifyIdToken(idToken)
+    .catch(error => {
+      console.error(error)
+      res.send('Invalid authenticated.')
+    })
+  console.log(decodedToken)
+  res.send(decodedToken)
+
+  const db = admin.firestore()
+  req.body.db.collection('items').add({
+    price: Number(req.body.price),
+    userUid: req.body.uid,
+    createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+  })
+
+  res.header('Access-Control-Allow-Origin', '*')
+  res.send('Hello from Firebase!')
 })
+
+exports.spendItems = functions.https.onRequest(spendItemsApp)
