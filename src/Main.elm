@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, jsGotItems, jsGotUid, login, main, putSpend, update)
+port module Main exposing (Msg(..), auth, jsGotItems, jsGotMe, login, main, putSpend, update)
 
 import Browser
 import Html exposing (..)
@@ -28,13 +28,17 @@ type alias SpendItem =
     { id : String, price : Int, createdAt : String }
 
 
+type alias Me =
+    { uid : String, idToken : String }
+
+
 type alias Model =
-    { spendInput : String, uid : String, status : Status, spendItems : List SpendItem }
+    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" "" Loggedin [], auth () )
+    ( Model "" (Me "" "") Loggedin [], auth () )
 
 
 port auth : () -> Cmd msg
@@ -49,7 +53,7 @@ type Msg
     | ClickedPutSpend String
     | CompletedPutSpend ()
     | ClickedLogin
-    | GotUid String
+    | GotMe Me
     | StartedFetchItems String
     | GotItems (List SpendItem)
 
@@ -61,7 +65,7 @@ update msg model =
             ( { model | spendInput = value }, Cmd.none )
 
         ClickedPutSpend value ->
-            ( model, putSpend (PutSpendData model.uid model.spendInput) )
+            ( model, putSpend (PutSpendData model.me.uid model.spendInput) )
 
         CompletedPutSpend () ->
             ( { model | spendInput = "" }, Cmd.none )
@@ -69,8 +73,15 @@ update msg model =
         ClickedLogin ->
             ( { model | spendInput = "" }, login () )
 
-        GotUid uid ->
-            ( { model | uid = uid, status = Loggedin }, fetchItems uid )
+        GotMe me ->
+            let
+                oldMe =
+                    model.me
+
+                newMe =
+                    { oldMe | uid = me.uid, idToken = me.idToken }
+            in
+            ( { model | me = newMe, status = Loggedin }, fetchItems me.uid )
 
         StartedFetchItems uid ->
             ( model, fetchItems uid )
@@ -102,10 +113,10 @@ port fetchItems : String -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsGotUid GotUid, jsCompletedPutSpend CompletedPutSpend, jsGotItems GotItems ]
+    Sub.batch [ jsGotMe GotMe, jsCompletedPutSpend CompletedPutSpend, jsGotItems GotItems ]
 
 
-port jsGotUid : (String -> msg) -> Sub msg
+port jsGotMe : (Me -> msg) -> Sub msg
 
 
 port jsCompletedFetchItems : (String -> msg) -> Sub msg
@@ -170,6 +181,7 @@ spendItemCards items =
                         [ div []
                             [ p [ class "title" ]
                                 [ text (String.fromInt item.price ++ "円") ]
+                            , p [ class "subtitle" ] [ text item.createdAt ]
                             , button [ class "button is-danger" ] [ i [ class "material-icons" ] [ text "delete" ] ]
                             ]
                         ]

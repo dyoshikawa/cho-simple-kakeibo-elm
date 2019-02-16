@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
 import moment from 'moment'
 import 'bulma'
 import 'material-icons/iconfont/material-icons.scss'
@@ -25,10 +27,11 @@ app.ports.login.subscribe(() => {
 })
 
 app.ports.auth.subscribe(() => {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(async user => {
     if (user) {
       console.log(user)
-      app.ports.jsGotUid.send(user.uid)
+      const idToken = await user.getIdToken()
+      app.ports.jsGotUid.send({ uid: user.uid, idToken: idToken })
     } else {
       console.log('You are guest.')
     }
