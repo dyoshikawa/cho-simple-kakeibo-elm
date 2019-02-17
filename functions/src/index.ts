@@ -54,6 +54,32 @@ spendItemsApp.delete(
     if (me == null) {
       return res.send('Invalid authenticated.')
     }
+
+    const spend = req.body.spend
+
+    console.log(`spend: ${spend}`)
+
+    const db = admin.firestore()
+    db.collection('items').add({
+      price: Number(spend),
+      userUid: me.uid,
+      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+    })
+
+    return res.send('Hello from Firebase!')
+  }
+)
+
+spendItemsApp.delete(
+  '/:id',
+  async (req: any, res): Promise<Express.Response> => {
+    const me = req.me
+
+    console.log(`me: ${me}`)
+
+    if (me == null) {
+      return res.send('Invalid authenticated.')
+    }
     console.log(`req.params.id: ${req.params.id}`)
 
     const db = admin.firestore()
