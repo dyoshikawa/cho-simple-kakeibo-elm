@@ -21,6 +21,8 @@ const authenticate = async (
 
   const idToken = authorization.split('Bearer ')[1]
 
+  console.log(`idToken: ${idToken}`)
+
   const me = await admin
     .auth()
     .verifyIdToken(idToken)
@@ -36,7 +38,7 @@ const authenticate = async (
 spendItemsApp.use([
   cors({
     origin: true,
-    methods: ['GET', 'PUT', 'POST'],
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
   authenticate,
@@ -53,16 +55,9 @@ spendItemsApp.delete(
     if (me == null) {
       return res.send('Invalid authenticated.')
     }
-
-    const db = admin.firestore()
-    db.collection('items').add({
-      price: Number(req.body.price),
-      userUid: me.uid,
-      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
-    })
-
     console.log(`req.params.id: ${req.params.id}`)
 
+    const db = admin.firestore()
     const docRef = db.collection('items').doc(req.params.id)
 
     const doc = await docRef.get()

@@ -96,7 +96,8 @@ update msg model =
             ( model
             , Http.request
                 { method = "DELETE"
-                , headers = []
+                , headers =
+                    [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
                 , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ itemId
                 , body = Http.emptyBody
                 , expect = Http.expectString GotText
