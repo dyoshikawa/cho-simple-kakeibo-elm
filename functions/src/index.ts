@@ -7,14 +7,7 @@ import cors from 'cors'
 admin.initializeApp()
 
 const spendItemsApp = express()
-spendItemsApp.use(
-  cors({
-    origin: true,
-    methods: ['GET', 'PUT', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-)
+
 const authenticate = async (
   req: any,
   res: Express.Response,
@@ -35,13 +28,19 @@ const authenticate = async (
       console.error(error)
       res.send('Invalid authenticated.')
     })
-  console.log(me)
 
   req.me = me
 
   next()
 }
-spendItemsApp.use(authenticate)
+spendItemsApp.use([
+  cors({
+    origin: true,
+    methods: ['GET', 'PUT', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+  authenticate,
+])
 
 spendItemsApp.delete(
   '/:id',

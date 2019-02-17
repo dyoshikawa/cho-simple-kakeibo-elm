@@ -57,6 +57,8 @@ type Msg
     | GotMe Me
     | StartedFetchItems String
     | GotItems (List SpendItem)
+    | DeletingItem String
+    | GotText (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,6 +91,22 @@ update msg model =
 
         GotItems items ->
             ( { model | spendItems = items }, Cmd.none )
+
+        DeletingItem itemId ->
+            ( model
+            , Http.request
+                { method = "DELETE"
+                , headers = []
+                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ itemId
+                , body = Http.emptyBody
+                , expect = Http.expectString GotText
+                , timeout = Nothing
+                , tracker = Nothing
+                }
+            )
+
+        GotText text ->
+            ( model, Cmd.none )
 
 
 
@@ -162,6 +180,7 @@ view model =
             [ div [ class "container" ]
                 (spendItemCards
                     model.spendItems
+                    DeletingItem
                 )
             ]
         ]
@@ -172,18 +191,17 @@ viewInput t p v toMsg =
     input [ type_ t, placeholder p, value v, onInput toMsg ] []
 
 
-spendItemCards : List SpendItem -> List (Html msg)
-spendItemCards items =
+spendItemCards : List SpendItem -> (String -> msg) -> List (Html msg)
+spendItemCards items msgDeletingItem =
     List.map
         (\item ->
             div [ class "card" ]
                 [ div [ class "card-content" ]
                     [ div [ class "content" ]
                         [ div []
-                            [ p [ class "title" ]
-                                [ text (String.fromInt item.price ++ "円") ]
+                            [ p [ class "title" ] [ text (String.fromInt item.price ++ "円") ]
                             , p [ class "subtitle" ] [ text item.createdAt ]
-                            , button [ class "button is-danger" ] [ i [ class "material-icons" ] [ text "delete" ] ]
+                            , button [ class "button is-danger", onClick (msgDeletingItem item.id) ] [ i [ class "material-icons" ] [ text "delete" ] ]
                             ]
                         ]
                     ]
