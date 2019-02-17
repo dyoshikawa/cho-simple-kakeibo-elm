@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import moment from 'moment'
-import express from 'express'
+import express, * as Express from 'express'
 import cors from 'cors'
 
 admin.initializeApp()
@@ -15,8 +15,11 @@ spendItemsApp.use(
     credentials: true,
   })
 )
-
-spendItemsApp.get('/', async (req, res) => {
+const authenticate = async (
+  req: any,
+  res: Express.Response,
+  next: Express.NextFunction
+) => {
   const authorization = req.get('Authorization')
   if (authorization == null) {
     res.send({ errors: ['Invalid authenticated.'] })
@@ -25,25 +28,43 @@ spendItemsApp.get('/', async (req, res) => {
 
   const idToken = authorization.split('Bearer ')[1]
 
-  const decodedToken = await admin
+  const me = await admin
     .auth()
     .verifyIdToken(idToken)
     .catch(error => {
       console.error(error)
       res.send('Invalid authenticated.')
     })
-  console.log(decodedToken)
-  res.send(decodedToken)
+  console.log(me)
 
-  const db = admin.firestore()
-  db.collection('items').add({
-    price: Number(req.body.price),
-    userUid: req.body.uid,
-    createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
-  })
+  req.me = me
 
-  res.header('Access-Control-Allow-Origin', '*')
-  res.send('Hello from Firebase!')
-})
+  next()
+}
+spendItemsApp.use(authenticate)
+
+spendItemsApp.get(
+  '/',
+  async (req: any, res): Promise<Express.Response> => {
+    const me = req.me
+
+    console.log(me)
+    // return res.send(me)
+
+    if (me == null) {
+      return res.send('Invalid authenticated.')
+    }
+
+    const db = admin.firestore()
+    db.collection('items').add({
+      price: Number(req.body.price),
+      userUid: me.uid,
+      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+    })
+
+    res.header('Access-Control-Allow-Origin', '*')
+    return res.send('Hello from Firebase!')
+  }
+)
 
 exports.spendItems = functions.https.onRequest(spendItemsApp)
