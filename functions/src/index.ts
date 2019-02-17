@@ -43,12 +43,12 @@ const authenticate = async (
 }
 spendItemsApp.use(authenticate)
 
-spendItemsApp.get(
-  '/',
+spendItemsApp.delete(
+  '/:id',
   async (req: any, res): Promise<Express.Response> => {
     const me = req.me
 
-    console.log(me)
+    console.log(`me: ${me}`)
     // return res.send(me)
 
     if (me == null) {
@@ -62,7 +62,27 @@ spendItemsApp.get(
       createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
     })
 
-    res.header('Access-Control-Allow-Origin', '*')
+    console.log(`req.params.id: ${req.params.id}`)
+
+    const docRef = db.collection('items').doc(req.params.id)
+
+    const doc = await docRef.get()
+    if (!doc.exists) return res.send('Invalid doc id.')
+    const data = doc.data()
+    if (data == null) return res.send('Invalid doc id.')
+    if (data.uid != me.uid) return res.send('Invalid doc id.')
+
+    db.collection('items')
+      .doc(doc.id)
+      .delete()
+      .then(function() {
+        return res.send('Document successfully deleted!')
+      })
+      .catch(function(error) {
+        console.error('Error removing document: ', error)
+        return res.send('Fail to delete document.')
+      })
+
     return res.send('Hello from Firebase!')
   }
 )
