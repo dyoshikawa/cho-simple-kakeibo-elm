@@ -50,7 +50,6 @@ spendItemsApp.delete(
     const me = req.me
 
     console.log(`me: ${me}`)
-    // return res.send(me)
 
     if (me == null) {
       return res.send('Invalid authenticated.')
