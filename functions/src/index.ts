@@ -44,8 +44,8 @@ spendItemsApp.use([
   authenticate,
 ])
 
-spendItemsApp.delete(
-  '/:id',
+spendItemsApp.post(
+  '/',
   async (req: any, res): Promise<Express.Response> => {
     const me = req.me
 
