@@ -61,10 +61,12 @@ spendItemsApp.delete(
     const docRef = db.collection('items').doc(req.params.id)
 
     const doc = await docRef.get()
+    console.log(`doc ${doc.id}`)
     if (!doc.exists) return res.send('Invalid doc id.')
     const data = doc.data()
     if (data == null) return res.send('Invalid doc id.')
-    if (data.uid != me.uid) return res.send('Invalid doc id.')
+    console.log(`data: ${data.userUid}`)
+    if (data.userUid != me.uid) return res.send('Invalid doc id.')
 
     db.collection('items')
       .doc(doc.id)
