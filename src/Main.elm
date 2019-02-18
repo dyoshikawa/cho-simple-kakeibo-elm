@@ -53,15 +53,14 @@ port auth : () -> Cmd msg
 
 type Msg
     = DoneInput String
-    | ClickedPutSpend String
-    | PuttingSpendItem String
-    | PutSpendItem (Result Http.Error String)
+    | PutSpendItem String
+    | DonePutSpendItem (Result Http.Error String)
     | CompletedPutSpend ()
-    | ClickedLogin
+    | Login
     | GotMe Me
     | StartedFetchItems String
     | GotItems (List SpendItem)
-    | DeletingItem SpendItem
+    | DeleteItem SpendItem
     | GotText (Result Http.Error String)
 
 
@@ -71,10 +70,7 @@ update msg model =
         DoneInput value ->
             ( { model | spendInput = value }, Cmd.none )
 
-        ClickedPutSpend value ->
-            ( model, putSpend (PutSpendData model.me.uid model.spendInput) )
-
-        PuttingSpendItem price ->
+        PutSpendItem price ->
             ( { model | spendBusy = True }
             , Http.request
                 { method = "POST"
@@ -82,19 +78,19 @@ update msg model =
                     [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
                 , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/"
                 , body = Http.jsonBody (object [ ( "price", string price ) ])
-                , expect = Http.expectString PutSpendItem
+                , expect = Http.expectString DonePutSpendItem
                 , timeout = Nothing
                 , tracker = Nothing
                 }
             )
 
-        PutSpendItem _ ->
+        DonePutSpendItem _ ->
             ( { model | spendBusy = False, spendInput = "" }, resetSpendInputValue () )
 
         CompletedPutSpend () ->
             ( { model | spendInput = "" }, resetSpendInputValue () )
 
-        ClickedLogin ->
+        Login ->
             ( { model | spendInput = "" }, login () )
 
         GotMe me ->
@@ -113,7 +109,7 @@ update msg model =
         GotItems items ->
             ( { model | spendItems = items }, Cmd.none )
 
-        DeletingItem item ->
+        DeleteItem item ->
             ( { model
                 | spendItems =
                     (\items ->
@@ -219,7 +215,7 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info", onClick ClickedLogin ] [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
+                , button [ class "button is-info", onClick Login ] [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]
@@ -239,7 +235,7 @@ view model =
                                  )
                                     model.spendBusy
                                 )
-                            , onClick (PuttingSpendItem model.spendInput)
+                            , onClick (PutSpendItem model.spendInput)
                             ]
                             [ text "登録" ]
                         ]
@@ -250,7 +246,7 @@ view model =
             [ div [ class "container" ]
                 (spendItemCards
                     model.spendItems
-                    DeletingItem
+                    DeleteItem
                 )
             ]
         ]
