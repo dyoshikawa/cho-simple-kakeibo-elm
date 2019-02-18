@@ -32,14 +32,14 @@ app.ports.auth.subscribe(() => {
       console.log(user)
       const idToken = await user.getIdToken()
       console.log(idToken)
-      app.ports.jsFetchedMe.send({ uid: user.uid, idToken: idToken })
+      app.ports.fetchedMe.send({ uid: user.uid, idToken: idToken })
     } else {
       console.log('You are guest.')
     }
   })
 })
 
-app.ports.fetchItems.subscribe((uid: string) => {
+app.ports.fetchSpendItems.subscribe((uid: string) => {
   console.log('fetchItems')
   firebase
     .firestore()
@@ -63,7 +63,7 @@ app.ports.fetchItems.subscribe((uid: string) => {
         return 0
       })
       console.log(items)
-      app.ports.jsFetchedItems.send(items)
+      app.ports.fetchedSpendItems.send(items)
     })
 })
 
