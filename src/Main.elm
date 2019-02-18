@@ -53,13 +53,12 @@ port auth : () -> Cmd msg
 
 type Msg
     = DoneInput String
+    | Login
+    | FetchedMe Me
+    | FetchItems String
+    | FetchedItems (List SpendItem)
     | PutSpendItem String
     | DonePutSpendItem (Result Http.Error String)
-    | CompletedPutSpend ()
-    | Login
-    | GotMe Me
-    | StartedFetchItems String
-    | GotItems (List SpendItem)
     | DeleteItem SpendItem
     | GotText (Result Http.Error String)
 
@@ -87,13 +86,10 @@ update msg model =
         DonePutSpendItem _ ->
             ( { model | spendBusy = False, spendInput = "" }, resetSpendInputValue () )
 
-        CompletedPutSpend () ->
-            ( { model | spendInput = "" }, resetSpendInputValue () )
-
         Login ->
             ( { model | spendInput = "" }, login () )
 
-        GotMe me ->
+        FetchedMe me ->
             let
                 oldMe =
                     model.me
@@ -103,10 +99,10 @@ update msg model =
             in
             ( { model | me = newMe, status = Loggedin }, fetchItems me.uid )
 
-        StartedFetchItems uid ->
+        FetchItems uid ->
             ( model, fetchItems uid )
 
-        GotItems items ->
+        FetchedItems items ->
             ( { model | spendItems = items }, Cmd.none )
 
         DeleteItem item ->
@@ -183,16 +179,10 @@ port resetSpendInputValue : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsGotMe GotMe, jsCompletedPutSpend CompletedPutSpend, jsGotItems GotItems ]
+    Sub.batch [ jsGotMe FetchedMe, jsGotItems FetchedItems ]
 
 
 port jsGotMe : (Me -> msg) -> Sub msg
-
-
-port jsCompletedFetchItems : (String -> msg) -> Sub msg
-
-
-port jsCompletedPutSpend : (() -> msg) -> Sub msg
 
 
 port jsGotItems : (List SpendItem -> msg) -> Sub msg
