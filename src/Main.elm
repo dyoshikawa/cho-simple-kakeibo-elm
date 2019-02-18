@@ -60,7 +60,7 @@ type Msg
     | GotMe Me
     | StartedFetchItems String
     | GotItems (List SpendItem)
-    | DeletingItem String
+    | DeletingItem SpendItem
     | GotText (Result Http.Error String)
 
 
@@ -109,13 +109,13 @@ update msg model =
         GotItems items ->
             ( { model | spendItems = items }, Cmd.none )
 
-        DeletingItem itemId ->
+        DeletingItem item ->
             ( model
             , Http.request
                 { method = "DELETE"
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
-                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ itemId
+                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ item.id
                 , body = Http.emptyBody
                 , expect = Http.expectString GotText
                 , timeout = Nothing
@@ -124,7 +124,23 @@ update msg model =
             )
 
         GotText text ->
-            ( model, Cmd.none )
+            ( { model
+                | spendItems =
+                    (\items ->
+                        List.map
+                            (\item ->
+                                if item.id == item.id then
+                                    { item | busy = False }
+
+                                else
+                                    item
+                            )
+                            items
+                    )
+                        model.spendItems
+              }
+            , Cmd.none
+            )
 
 
 
@@ -209,12 +225,8 @@ viewInput t p v toMsg =
     input [ type_ t, placeholder p, value v, onInput toMsg ] []
 
 
-spendItemCards : List SpendItem -> (String -> msg) -> List (Html msg)
+spendItemCards : List SpendItem -> (SpendItem -> msg) -> List (Html msg)
 spendItemCards items msgDeletingItem =
-    let
-        itemsaa =
-            items
-    in
     List.map
         (\item ->
             div
@@ -236,7 +248,7 @@ spendItemCards items msgDeletingItem =
                                            )
                                             item.busy
                                     )
-                                , onClick (msgDeletingItem item.id)
+                                , onClick (msgDeletingItem item)
                                 ]
                                 [ i [ class "material-icons" ] [ text "delete" ] ]
                             ]
