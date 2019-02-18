@@ -5,6 +5,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
+import Json.Decode exposing (Decoder, field, map2)
+import Json.Encode exposing (encode, int, object, string)
 
 
 main =
@@ -52,6 +54,7 @@ port auth : () -> Cmd msg
 type Msg
     = DoneInput String
     | ClickedPutSpend String
+    | PuttingSpendItem String
     | CompletedPutSpend ()
     | ClickedLogin
     | GotMe Me
@@ -69,6 +72,20 @@ update msg model =
 
         ClickedPutSpend value ->
             ( model, putSpend (PutSpendData model.me.uid model.spendInput) )
+
+        PuttingSpendItem price ->
+            ( model
+            , Http.request
+                { method = "POST"
+                , headers =
+                    [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
+                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/"
+                , body = Http.jsonBody (object [ ( "price", string price ) ])
+                , expect = Http.expectString GotText
+                , timeout = Nothing
+                , tracker = Nothing
+                }
+            )
 
         CompletedPutSpend () ->
             ( { model | spendInput = "" }, Cmd.none )
@@ -173,7 +190,7 @@ view model =
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
                         [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
-                    , div [ class "control" ] [ button [ class "button is-info", onClick (ClickedPutSpend model.spendInput) ] [ text "登録" ] ]
+                    , div [ class "control" ] [ button [ class "button is-info", onClick (PuttingSpendItem model.spendInput) ] [ text "登録" ] ]
                     ]
                 ]
             ]

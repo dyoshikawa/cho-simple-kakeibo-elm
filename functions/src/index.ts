@@ -30,6 +30,9 @@ const authenticate = async (
       console.error(error)
       res.send('Invalid authenticated.')
     })
+  if (me == null) {
+    return res.send('Invalid authenticated.')
+  }
 
   req.me = me
 
@@ -47,26 +50,24 @@ spendItemsApp.use([
 spendItemsApp.post(
   '/',
   async (req: any, res): Promise<Express.Response> => {
+    console.log('Started post spend items.')
+
     const me = req.me
 
     console.log(`me: ${me}`)
 
-    if (me == null) {
-      return res.send('Invalid authenticated.')
-    }
+    const price = req.body.price
 
-    const spend = req.body.spend
-
-    console.log(`spend: ${spend}`)
+    console.log(`price: ${price}`)
 
     const db = admin.firestore()
     db.collection('items').add({
-      price: Number(spend),
+      price: Number(price),
       userUid: me.uid,
       createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
     })
 
-    return res.send('Hello from Firebase!')
+    return res.send('Success.')
   }
 )
 
@@ -77,9 +78,6 @@ spendItemsApp.delete(
 
     console.log(`me: ${me}`)
 
-    if (me == null) {
-      return res.send('Invalid authenticated.')
-    }
     console.log(`req.params.id: ${req.params.id}`)
 
     const db = admin.firestore()
