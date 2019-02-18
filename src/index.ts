@@ -67,22 +67,6 @@ app.ports.fetchItems.subscribe((uid: string) => {
     })
 })
 
-app.ports.putSpend.subscribe(async (value: { uid: string; spend: string }) => {
-  console.log('putSpend')
-  console.log(value)
-  await firebase
-    .firestore()
-    .collection('items')
-    .add({
-      price: Number(value.spend),
-      userUid: value.uid,
-      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
-    })
-  const el = document.querySelector('#spendInput') as HTMLInputElement
-  el.value = ''
-  app.ports.jsCompletedPutSpend.send(null)
-})
-
 app.ports.resetSpendInputValue.subscribe(async () => {
   console.log('putSpendInputValue')
   const el = document.querySelector('#spendInput') as HTMLInputElement
