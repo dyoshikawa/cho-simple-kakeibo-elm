@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, jsFetchedItems, jsFetchedMe, login, main, putSpend, resetSpendInputValue, update)
+port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, main, putSpend, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -55,12 +55,12 @@ type Msg
     = DoneInput String
     | Login
     | FetchedMe Me
-    | FetchItems String
-    | FetchedItems (List SpendItem)
+    | FetchSpendItems String
+    | FetchedSpendItems (List SpendItem)
     | PutSpendItem String
     | DonePutSpendItem (Result Http.Error String)
-    | DeleteItem SpendItem
-    | GotText (Result Http.Error String)
+    | DeleteSpendItem SpendItem
+    | DeletedSpendItem (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -97,15 +97,15 @@ update msg model =
                 newMe =
                     { oldMe | uid = me.uid, idToken = me.idToken }
             in
-            ( { model | me = newMe, status = Loggedin }, fetchItems me.uid )
+            ( { model | me = newMe, status = Loggedin }, fetchSpendItems me.uid )
 
-        FetchItems uid ->
-            ( model, fetchItems uid )
+        FetchSpendItems uid ->
+            ( model, fetchSpendItems uid )
 
-        FetchedItems items ->
+        FetchedSpendItems items ->
             ( { model | spendItems = items }, Cmd.none )
 
-        DeleteItem item ->
+        DeleteSpendItem item ->
             ( { model
                 | spendItems =
                     (\items ->
@@ -127,13 +127,13 @@ update msg model =
                     [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
                 , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ item.id
                 , body = Http.emptyBody
-                , expect = Http.expectString GotText
+                , expect = Http.expectString DeletedSpendItem
                 , timeout = Nothing
                 , tracker = Nothing
                 }
             )
 
-        GotText text ->
+        DeletedSpendItem _ ->
             ( { model
                 | spendItems =
                     (\items ->
@@ -167,7 +167,7 @@ type alias PutSpendData =
 port putSpend : PutSpendData -> Cmd msg
 
 
-port fetchItems : String -> Cmd msg
+port fetchSpendItems : String -> Cmd msg
 
 
 port resetSpendInputValue : () -> Cmd msg
@@ -179,13 +179,13 @@ port resetSpendInputValue : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsFetchedMe FetchedMe, jsFetchedItems FetchedItems ]
+    Sub.batch [ fetchedMe FetchedMe, fetchedSpendItems FetchedSpendItems ]
 
 
-port jsFetchedMe : (Me -> msg) -> Sub msg
+port fetchedMe : (Me -> msg) -> Sub msg
 
 
-port jsFetchedItems : (List SpendItem -> msg) -> Sub msg
+port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
 
 
 
@@ -236,7 +236,7 @@ view model =
             [ div [ class "container" ]
                 (spendItemCards
                     model.spendItems
-                    DeleteItem
+                    DeleteSpendItem
                 )
             ]
         ]
