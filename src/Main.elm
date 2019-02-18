@@ -110,7 +110,21 @@ update msg model =
             ( { model | spendItems = items }, Cmd.none )
 
         DeletingItem item ->
-            ( model
+            ( { model
+                | spendItems =
+                    (\items ->
+                        List.map
+                            (\item2 ->
+                                if item2.id == item.id then
+                                    { item2 | busy = True }
+
+                                else
+                                    item2
+                            )
+                            items
+                    )
+                        model.spendItems
+              }
             , Http.request
                 { method = "DELETE"
                 , headers =
@@ -241,7 +255,7 @@ spendItemCards items msgDeletingItem =
                                     ("button is-danger"
                                         ++ (\busy ->
                                                 if busy == True then
-                                                    "isLoading"
+                                                    " is-loading"
 
                                                 else
                                                     ""
