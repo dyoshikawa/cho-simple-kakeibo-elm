@@ -28,10 +28,10 @@ const authenticate = async (
     .verifyIdToken(idToken)
     .catch(error => {
       console.error(error)
-      res.status(401).send('Unauthenticated.')
+      res.status(401).send({ errors: ['Unauthenticated.'] })
     })
   if (me == null) {
-    return res.status(401).send('Unauthenticated.')
+    return res.status(401).send({ errors: ['Unauthenticated.'] })
   }
 
   req.me = me
@@ -73,7 +73,7 @@ spendItemsApp.post(
         return res.status(500).send({ errors: ['Failed to put data.'] })
       })
 
-    return res.status(200).send('Success.')
+    return res.status(200).send({ message: 'Success.' })
   }
 )
 
