@@ -28,7 +28,7 @@ type Status
 
 
 type alias SpendItem =
-    { id : String, price : Int, createdAt : String }
+    { id : String, price : Int, createdAt : String, busy : Bool }
 
 
 type alias Me =
@@ -211,15 +211,34 @@ viewInput t p v toMsg =
 
 spendItemCards : List SpendItem -> (String -> msg) -> List (Html msg)
 spendItemCards items msgDeletingItem =
+    let
+        itemsaa =
+            items
+    in
     List.map
         (\item ->
-            div [ class "card" ]
+            div
+                [ class "card" ]
                 [ div [ class "card-content" ]
                     [ div [ class "content" ]
                         [ div []
                             [ p [ class "title" ] [ text (String.fromInt item.price ++ "円") ]
                             , p [ class "subtitle" ] [ text item.createdAt ]
-                            , button [ class "button is-danger", onClick (msgDeletingItem item.id) ] [ i [ class "material-icons" ] [ text "delete" ] ]
+                            , button
+                                [ class
+                                    ("button is-danger"
+                                        ++ (\busy ->
+                                                if busy == True then
+                                                    "isLoading"
+
+                                                else
+                                                    ""
+                                           )
+                                            item.busy
+                                    )
+                                , onClick (msgDeletingItem item.id)
+                                ]
+                                [ i [ class "material-icons" ] [ text "delete" ] ]
                             ]
                         ]
                     ]

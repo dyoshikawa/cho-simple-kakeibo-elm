@@ -55,6 +55,7 @@ app.ports.fetchItems.subscribe((uid: string) => {
         price: doc.data().price as number,
         userUid: doc.data().userUid as string,
         createdAt: doc.data().createdAt as string,
+        busy: false,
       }))
       items.sort((a, b) => {
         if (a.createdAt > b.createdAt) return -1
