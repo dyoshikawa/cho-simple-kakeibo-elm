@@ -82,3 +82,9 @@ app.ports.putSpend.subscribe(async (value: { uid: string; spend: string }) => {
   el.value = ''
   app.ports.jsCompletedPutSpend.send(null)
 })
+
+app.ports.resetSpendInputValue.subscribe(async () => {
+  console.log('putSpendInputValue')
+  const el = document.querySelector('#spendInput') as HTMLInputElement
+  el.value = ''
+})

@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, jsGotItems, jsGotMe, login, main, putSpend, update)
+port module Main exposing (Msg(..), auth, jsGotItems, jsGotMe, login, main, putSpend, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -36,12 +36,12 @@ type alias Me =
 
 
 type alias Model =
-    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem }
+    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem, spendBusy : Bool }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loggedin [], auth () )
+    ( Model "" (Me "" "") Loggedin [] False, auth () )
 
 
 port auth : () -> Cmd msg
@@ -55,6 +55,7 @@ type Msg
     = DoneInput String
     | ClickedPutSpend String
     | PuttingSpendItem String
+    | PutSpendItem (Result Http.Error String)
     | CompletedPutSpend ()
     | ClickedLogin
     | GotMe Me
@@ -74,21 +75,24 @@ update msg model =
             ( model, putSpend (PutSpendData model.me.uid model.spendInput) )
 
         PuttingSpendItem price ->
-            ( model
+            ( { model | spendBusy = True }
             , Http.request
                 { method = "POST"
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
                 , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/"
                 , body = Http.jsonBody (object [ ( "price", string price ) ])
-                , expect = Http.expectString GotText
+                , expect = Http.expectString PutSpendItem
                 , timeout = Nothing
                 , tracker = Nothing
                 }
             )
 
+        PutSpendItem _ ->
+            ( { model | spendBusy = False, spendInput = "" }, resetSpendInputValue () )
+
         CompletedPutSpend () ->
-            ( { model | spendInput = "" }, Cmd.none )
+            ( { model | spendInput = "" }, resetSpendInputValue () )
 
         ClickedLogin ->
             ( { model | spendInput = "" }, login () )
@@ -174,6 +178,9 @@ port putSpend : PutSpendData -> Cmd msg
 port fetchItems : String -> Cmd msg
 
 
+port resetSpendInputValue : () -> Cmd msg
+
+
 
 -- Sub
 
@@ -220,7 +227,22 @@ view model =
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
                         [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
-                    , div [ class "control" ] [ button [ class "button is-info", onClick (PuttingSpendItem model.spendInput) ] [ text "登録" ] ]
+                    , div [ class "control" ]
+                        [ button
+                            [ class
+                                ((\busy ->
+                                    if busy == True then
+                                        "button is-info is-loading"
+
+                                    else
+                                        "button is-info"
+                                 )
+                                    model.spendBusy
+                                )
+                            , onClick (PuttingSpendItem model.spendInput)
+                            ]
+                            [ text "登録" ]
+                        ]
                     ]
                 ]
             ]
