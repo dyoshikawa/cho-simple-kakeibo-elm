@@ -252,15 +252,14 @@ spendItemCards items msgDeletingItem =
                             , p [ class "subtitle" ] [ text item.createdAt ]
                             , button
                                 [ class
-                                    ("button is-danger"
-                                        ++ (\busy ->
-                                                if busy == True then
-                                                    " is-loading"
+                                    ((\busy ->
+                                        if busy == True then
+                                            "button is-danger is-loading"
 
-                                                else
-                                                    ""
-                                           )
-                                            item.busy
+                                        else
+                                            "button is-danger"
+                                     )
+                                        item.busy
                                     )
                                 , onClick (msgDeletingItem item)
                                 ]

@@ -61,7 +61,7 @@ spendItemsApp.post(
     console.log(`price: ${price}`)
 
     const db = admin.firestore()
-    await db
+    const docRef = await db
       .collection('items')
       .add({
         price: Number(price),
@@ -72,6 +72,8 @@ spendItemsApp.post(
         console.error(error)
         return res.status(500).send({ errors: ['Failed to put data.'] })
       })
+
+    console.log(`docRef: ${docRef}`)
 
     return res.status(200).send({ message: 'Success.' })
   }
@@ -97,18 +99,16 @@ spendItemsApp.delete(
     console.log(`data: ${data.userUid}`)
     if (data.userUid != me.uid) return res.send('Invalid doc id.')
 
-    db.collection('items')
+    await db
+      .collection('items')
       .doc(doc.id)
       .delete()
-      .then(function() {
-        return res.send('Document successfully deleted!')
-      })
       .catch(function(error) {
         console.error('Error removing document: ', error)
-        return res.send('Fail to delete document.')
+        return res.status(500).send({ errors: ['Fail to delete document.'] })
       })
 
-    return res.send('Hello from Firebase!')
+    return res.status(200).send({ id: doc.id })
   }
 )
 
