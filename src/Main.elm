@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, jsGotItems, jsGotMe, login, main, putSpend, resetSpendInputValue, update)
+port module Main exposing (Msg(..), auth, jsFetchedItems, jsFetchedMe, login, main, putSpend, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -179,13 +179,13 @@ port resetSpendInputValue : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ jsGotMe FetchedMe, jsGotItems FetchedItems ]
+    Sub.batch [ jsFetchedMe FetchedMe, jsFetchedItems FetchedItems ]
 
 
-port jsGotMe : (Me -> msg) -> Sub msg
+port jsFetchedMe : (Me -> msg) -> Sub msg
 
 
-port jsGotItems : (List SpendItem -> msg) -> Sub msg
+port jsFetchedItems : (List SpendItem -> msg) -> Sub msg
 
 
 
