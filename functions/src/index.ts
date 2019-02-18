@@ -15,7 +15,7 @@ const authenticate = async (
 ) => {
   const authorization = req.get('Authorization')
   if (authorization == null) {
-    res.send({ errors: ['Invalid authenticated.'] })
+    res.status(401).send({ errors: ['Unauthenticated.'] })
     return
   }
 
@@ -28,10 +28,10 @@ const authenticate = async (
     .verifyIdToken(idToken)
     .catch(error => {
       console.error(error)
-      res.send('Invalid authenticated.')
+      res.status(401).send('Unauthenticated.')
     })
   if (me == null) {
-    return res.send('Invalid authenticated.')
+    return res.status(401).send('Unauthenticated.')
   }
 
   req.me = me
@@ -61,13 +61,19 @@ spendItemsApp.post(
     console.log(`price: ${price}`)
 
     const db = admin.firestore()
-    db.collection('items').add({
-      price: Number(price),
-      userUid: me.uid,
-      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
-    })
+    await db
+      .collection('items')
+      .add({
+        price: Number(price),
+        userUid: me.uid,
+        createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+      })
+      .catch(error => {
+        console.error(error)
+        return res.status(500).send({ errors: ['Failed to put data.'] })
+      })
 
-    return res.send('Success.')
+    return res.status(200).send('Success.')
   }
 )
 
