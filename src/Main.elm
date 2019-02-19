@@ -373,5 +373,30 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
 
 budgetView : Int -> Int -> Html msg
 budgetView budgetPrice spendSumPrice =
-    div [ class "container" ]
-        [ canvas [ id "myChart" ] [] ]
+    div []
+        [ section [ class "section" ]
+            [ div [ class "container" ]
+                [ div [ class "field has-addons" ]
+                    [ div [ class "control" ]
+                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput doneInput ] [] ]
+                    , div [ class "control" ]
+                        [ button
+                            [ class
+                                ((\busy ->
+                                    if busy == True then
+                                        "button is-info is-loading"
+
+                                    else
+                                        "button is-info"
+                                 )
+                                    spendBusy
+                                )
+                            , onClick (putSpendItem spendInput)
+                            ]
+                            [ text "登録" ]
+                        ]
+                    ]
+                , canvas [ id "myChart" ] []
+                ]
+            ]
+        ]
