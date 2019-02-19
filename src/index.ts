@@ -76,7 +76,7 @@ app.ports.resetSpendInputValue.subscribe(async () => {
 app.ports.generateBudgetChart.subscribe(
   async (data: { budget: number; spendSum: number }) => {
     console.log('generateBudgetChart')
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise(resolve => setTimeout(resolve, 100))
     const el = document.getElementById('myChart') as HTMLCanvasElement
     const ctx = el.getContext('2d')
     if (ctx == null) {
