@@ -48,8 +48,8 @@ type alias Me =
 
 
 type Tab
-    = Spend
-    | Budget
+    = SpendTab
+    | BudgetTab
 
 
 type alias Model =
@@ -58,7 +58,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False Spend, auth () )
+    ( Model "" (Me "" "") Loading [] False SpendTab, auth () )
 
 
 
@@ -222,13 +222,46 @@ view model =
                     [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
                 ]
             ]
-        , div [ class "tabs" ]
-            [ ul []
-                [ li [ class "is-active" ] [ a [] [ text "支出" ] ]
-                , li [] [ a [] [ text "予算" ] ]
+        , div [ class "container" ]
+            [ div [ class "tabs" ]
+                [ ul []
+                    [ li
+                        [ class
+                            ((\tab ->
+                                if tab == SpendTab then
+                                    "is-active"
+
+                                else
+                                    ""
+                             )
+                                model.tab
+                            )
+                        ]
+                        [ a [] [ text "支出" ] ]
+                    , li
+                        [ class
+                            ((\tab ->
+                                if tab == BudgetTab then
+                                    "is-active"
+
+                                else
+                                    ""
+                             )
+                                model.tab
+                            )
+                        ]
+                        [ a [] [ text "予算" ] ]
+                    ]
                 ]
             ]
-        , spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
+        , (\tab ->
+            if tab == SpendTab then
+                spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
+
+            else
+                spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
+          )
+            model.tab
         ]
 
 
