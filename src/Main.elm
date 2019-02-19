@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, generateBudgetChart, login, main, putSpend, removeBudgetChart, resetSpendInputValue, update)
+port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, main, putSpend, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -180,12 +180,12 @@ update msg model =
 
         ChangeTabSpend ->
             ( { model | tab = SpendTab }
-            , removeBudgetChart ()
+            , Cmd.none
             )
 
         ChangeTabBudget ->
             ( { model | tab = BudgetTab }
-            , generateBudgetChart model.generateBudgetChartData
+            , Cmd.none
             )
 
 
@@ -206,12 +206,6 @@ port fetchSpendItems : String -> Cmd msg
 
 
 port resetSpendInputValue : () -> Cmd msg
-
-
-port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
-
-
-port removeBudgetChart : () -> Cmd msg
 
 
 
