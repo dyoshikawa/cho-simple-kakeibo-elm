@@ -58,12 +58,21 @@ type Tab
 
 
 type alias Model =
-    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem, spendBusy : Bool, tab : Tab }
+    { spendInput : String
+    , me : Me
+    , status : Status
+    , spendItems : List SpendItem
+    , spendBusy : Bool
+    , tab : Tab
+    , generateBudgetChartData : GenerateBudgetChartData
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False SpendTab, auth () )
+    ( Model "" (Me "" "") Loading [] False SpendTab (GenerateBudgetChartData 0 0)
+    , auth ()
+    )
 
 
 
@@ -160,7 +169,7 @@ update msg model =
             )
 
         ChangeTab tab ->
-            ( { model | tab = tab }, generateBudgetChart (GenerateBudgetChartData 20 10) )
+            ( { model | tab = tab }, generateBudgetChart model.generateBudgetChartData )
 
 
 
