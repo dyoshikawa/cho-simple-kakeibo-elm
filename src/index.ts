@@ -4,6 +4,7 @@ import 'firebase/firestore'
 import { Chart } from 'chart.js'
 import 'bulma'
 import 'material-icons/iconfont/material-icons.scss'
+import moment from 'moment'
 
 const config = {
   apiKey: 'AIzaSyBsJBMFYIR_kN9dC1rdoLhRz41Xehe3aUo',
@@ -40,22 +41,28 @@ app.ports.auth.subscribe(() => {
   })
 })
 
-app.ports.fetchSpendItems.subscribe((uid: string) => {
+app.ports.fetchSpendItems.subscribe(async (uid: string) => {
   console.log('fetchItems')
-  firebase
+  const userDocRef = await firebase
+    .firestore()
+    .collection('users')
+    .doc(uid)
+  await firebase
     .firestore()
     .collection('items')
-    .where('userUid', '==', uid)
+    .where('userId', '==', userDocRef)
     .onSnapshot(snapShot => {
       const items: {
+        id: string
         price: number
-        userUid: string
         createdAt: string
+        busy: boolean
       }[] = snapShot.docs.map(doc => ({
         id: doc.id,
         price: doc.data().price as number,
-        userUid: doc.data().userUid as string,
-        createdAt: doc.data().createdAt as string,
+        createdAt: moment(doc.data().createdAt.toDate()).format(
+          'YY/MM/DD HH:mm:ss'
+        ),
         busy: false,
       }))
       items.sort((a, b) => {
