@@ -49,6 +49,10 @@ type alias SpendItem =
     { id : String, price : Int, createdAt : String, busy : Bool }
 
 
+type alias BudgetInput =
+    { value : String, busy : Bool }
+
+
 type alias Me =
     { uid : String, idToken : String }
 
@@ -66,12 +70,13 @@ type alias Model =
     , spendBusy : Bool
     , tab : Tab
     , generateBudgetChartData : GenerateBudgetChartData
+    , budgetInput : BudgetInput
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False SpendTab (GenerateBudgetChartData 0 0)
+    ( Model "" (Me "" "") Loading [] False SpendTab (GenerateBudgetChartData 0 0) (BudgetInput "" False)
     , auth ()
     )
 
@@ -290,7 +295,7 @@ view model =
                 spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
 
             else
-                budgetView 100 100
+                budgetView (GenerateBudgetChartData 100 50) (BudgetInput "" False)
           )
             model.tab
         ]
@@ -371,14 +376,14 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
         ]
 
 
-budgetView : Int -> Int -> Html msg
-budgetView budgetPrice spendSumPrice =
+budgetView : GenerateBudgetChartData -> BudgetInput -> Html msg
+budgetView generateBudgetChartData budgetInput =
     div []
         [ section [ class "section" ]
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput doneInput ] [] ]
+                        [ input [ id "spendInput", class "input", type_ "number", placeholder "予算金額" ] [] ]
                     , div [ class "control" ]
                         [ button
                             [ class
@@ -389,9 +394,8 @@ budgetView budgetPrice spendSumPrice =
                                     else
                                         "button is-info"
                                  )
-                                    spendBusy
+                                    budgetInput.busy
                                 )
-                            , onClick (putSpendItem spendInput)
                             ]
                             [ text "登録" ]
                         ]
