@@ -1,18 +1,18 @@
 module Update exposing (Msg(..), update)
 
+import Browser
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick, onInput)
+import Http
+import Json.Decode exposing (Decoder, field, map2)
+import Json.Encode exposing (encode, int, object, string)
+import Model exposing (SpendItem)
+import Port
+
+
+
 -- UPDATE
-
-
-type Msg
-    = DoneInput String
-    | Login
-    | FetchedMe Me
-    | FetchSpendItems String
-    | FetchedSpendItems (List SpendItem)
-    | PutSpendItem String
-    | DonePutSpendItem (Result Http.Error String)
-    | DeleteSpendItem SpendItem
-    | DeletedSpendItem (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -37,6 +37,9 @@ update msg model =
 
         DonePutSpendItem _ ->
             ( { model | spendBusy = False, spendInput = "" }, resetSpendInputValue () )
+
+        CheckAuth ->
+            ( model, auth () )
 
         Login ->
             ( { model | spendInput = "" }, login () )

@@ -1,4 +1,6 @@
-module Port exposing (PutSpendData, fetchSpendItems, login, putSpend, resetSpendInputValue)
+port module Port exposing (auth, fetchSpendItems, login, putSpend, resetSpendInputValue)
+
+import Model exposing (PutSpendData)
 
 
 port auth : () -> Cmd msg

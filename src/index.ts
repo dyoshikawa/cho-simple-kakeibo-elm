@@ -15,7 +15,7 @@ const config = {
 }
 firebase.initializeApp(config)
 
-const elm: any = require('./elm/Main.elm')
+const elm: any = require('./Main.elm')
 
 const app = elm.Elm.Main.init({
   node: document.getElementById('root'),

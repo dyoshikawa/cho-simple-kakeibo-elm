@@ -17,14 +17,26 @@ main =
 -- MODEL
 
 
-type alias Nested =
-    { value : String }
+type Msg
+    = DoneInput String
+    | Login
+    | FetchedMe Me
+    | FetchSpendItems String
+    | FetchedSpendItems (List SpendItem)
+    | PutSpendItem String
+    | DonePutSpendItem (Result Http.Error String)
+    | DeleteSpendItem SpendItem
+    | DeletedSpendItem (Result Http.Error String)
 
 
 type Status
     = Loggedin
     | NotLoggedin
     | Loading
+
+
+type alias PutSpendData =
+    { uid : String, spend : String }
 
 
 type alias SpendItem =
@@ -44,23 +56,8 @@ init _ =
     ( Model "" (Me "" "") Loading [] False, auth () )
 
 
-port auth : () -> Cmd msg
-
-
 
 -- UPDATE
-
-
-type Msg
-    = DoneInput String
-    | Login
-    | FetchedMe Me
-    | FetchSpendItems String
-    | FetchedSpendItems (List SpendItem)
-    | PutSpendItem String
-    | DonePutSpendItem (Result Http.Error String)
-    | DeleteSpendItem SpendItem
-    | DeletedSpendItem (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -154,14 +151,13 @@ update msg model =
 
 
 
--- Cmd
+-- Port
+
+
+port auth : () -> Cmd msg
 
 
 port login : () -> Cmd msg
-
-
-type alias PutSpendData =
-    { uid : String, spend : String }
 
 
 port putSpend : PutSpendData -> Cmd msg
@@ -174,7 +170,7 @@ port resetSpendInputValue : () -> Cmd msg
 
 
 
--- Sub
+-- Subscription
 
 
 subscriptions : Model -> Sub Msg

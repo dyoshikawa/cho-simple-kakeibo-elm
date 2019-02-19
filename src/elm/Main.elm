@@ -7,6 +7,10 @@ import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode exposing (Decoder, field, map2)
 import Json.Encode exposing (encode, int, object, string)
+import Model
+import Subscription
+import Update
+import View exposing (view)
 
 
 main =
