@@ -1,0 +1,17 @@
+[debug] [2019-02-19T09:28:25.268Z] ----------------------------------------------------------------------
+[debug] [2019-02-19T09:28:25.270Z] Command:       /home/dyoshikawa/.anyenv/envs/ndenv/versions/11.3/bin/node /home/dyoshikawa/.anyenv/envs/ndenv/versions/11.3/bin/firebase deploy --only functions
+[debug] [2019-02-19T09:28:25.270Z] CLI Version:   6.3.1
+[debug] [2019-02-19T09:28:25.270Z] Platform:      linux
+[debug] [2019-02-19T09:28:25.270Z] Node Version:  v11.3.0
+[debug] [2019-02-19T09:28:25.275Z] Time:          Tue Feb 19 2019 18:28:25 GMT+0900 (GMT+09:00)
+[debug] [2019-02-19T09:28:25.275Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-02-19T09:28:25.299Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-02-19T09:28:25.299Z] > authorizing via signed-in user
+[debug] [2019-02-19T09:28:25.299Z] [iam] checking project cho-simple-kakeibo-develop for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2019-02-19T09:28:25.301Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-02-19T09:28:25.301Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-02-19T09:28:26.080Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-19T09:28:26.083Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cho-simple-kakeibo-develop:testIamPermissions  
+

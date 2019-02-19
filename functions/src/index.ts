@@ -113,3 +113,17 @@ spendItemsApp.delete(
 )
 
 exports.spendItems = functions.https.onRequest(spendItemsApp)
+
+exports.createUserDocument = functions.auth.user().onCreate(async user => {
+  const db = admin.firestore()
+  await db
+    .collection('users')
+    .doc(user.uid)
+    .set({
+      budgetPrice: 0,
+      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+    })
+    .catch(error => {
+      console.error(error)
+    })
+})
