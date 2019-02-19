@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import moment from 'moment'
 import 'bulma'
 import 'material-icons/iconfont/material-icons.scss'
 
