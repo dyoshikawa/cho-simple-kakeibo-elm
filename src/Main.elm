@@ -40,6 +40,10 @@ type alias PutSpendData =
     { uid : String, spend : String }
 
 
+type alias GenerateBudgetChartData =
+    { budget : Int, spendSum : Int }
+
+
 type alias SpendItem =
     { id : String, price : Int, createdAt : String, busy : Bool }
 
@@ -156,7 +160,7 @@ update msg model =
             )
 
         ChangeTab tab ->
-            ( { model | tab = tab }, generateBudgetChart () )
+            ( { model | tab = tab }, generateBudgetChart (GenerateBudgetChartData 20 10) )
 
 
 
@@ -178,7 +182,7 @@ port fetchSpendItems : String -> Cmd msg
 port resetSpendInputValue : () -> Cmd msg
 
 
-port generateBudgetChart : () -> Cmd msg
+port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
 
 
 

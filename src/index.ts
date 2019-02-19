@@ -73,30 +73,41 @@ app.ports.resetSpendInputValue.subscribe(async () => {
   el.value = ''
 })
 
-app.ports.generateBudgetChart.subscribe(async () => {
-  console.log('generateBudgetChart')
-  await new Promise(resolve => setTimeout(resolve, 500))
-  const el = document.getElementById('myChart') as HTMLCanvasElement
-  const ctx = el.getContext('2d')
-  if (ctx == null) {
-    return
-  }
+app.ports.generateBudgetChart.subscribe(
+  async (data: { budget: number; spendSum: number }) => {
+    console.log('generateBudgetChart')
+    await new Promise(resolve => setTimeout(resolve, 500))
+    const el = document.getElementById('myChart') as HTMLCanvasElement
+    const ctx = el.getContext('2d')
+    if (ctx == null) {
+      return
+    }
 
-  new Chart(ctx, {
-    type: 'bar',
+    new Chart(ctx, {
+      type: 'bar',
 
-    data: {
-      labels: ['予算', '支出'],
-      datasets: [
-        {
-          label: '予算',
-          backgroundColor: ['blue', 'red'],
-          data: [10, 10],
+      data: {
+        labels: ['予算', '支出'],
+        datasets: [
+          {
+            label: '予算',
+            backgroundColor: ['blue', 'red'],
+            data: [data.budget, data.spendSum],
+          },
+        ],
+      },
+
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
         },
-      ],
-    },
-
-    // Configuration options go here
-    options: {},
-  })
-})
+      },
+    })
+  }
+)
