@@ -28,6 +28,7 @@ type Msg
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)
     | GenerateBudgetChart
+    | ChangeTab Tab
 
 
 type Status
@@ -158,6 +159,9 @@ update msg model =
         GenerateBudgetChart ->
             ( model, generateBudgetChart () )
 
+        ChangeTab tab ->
+            ( { model | tab = tab }, Cmd.none )
+
 
 
 -- Port
@@ -243,6 +247,7 @@ view model =
                              )
                                 model.tab
                             )
+                        , onClick (ChangeTab SpendTab)
                         ]
                         [ a [] [ text "支出" ] ]
                     , li
@@ -256,6 +261,7 @@ view model =
                              )
                                 model.tab
                             )
+                        , onClick (ChangeTab BudgetTab)
                         ]
                         [ a [] [ text "予算" ] ]
                     ]
@@ -266,7 +272,7 @@ view model =
                 spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
 
             else
-                spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
+                budgetView 100 100
           )
             model.tab
         ]
