@@ -41,7 +41,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loggedin [] False, auth () )
+    ( Model "" (Me "" "") Loading [] False, auth () )
 
 
 port auth : () -> Cmd msg
@@ -205,7 +205,20 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button [ class "button is-info", onClick Login ] [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
+                , button
+                    [ class
+                        ((\status ->
+                            if status == Loading then
+                                "button is-info is-loading"
+
+                            else
+                                "button is-info"
+                         )
+                            model.status
+                        )
+                    , onClick Login
+                    ]
+                    [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
                 ]
             ]
         , section [ class "section" ]

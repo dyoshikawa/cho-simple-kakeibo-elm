@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'bulma'
+// import './sass/style.scss'
 import 'material-icons/iconfont/material-icons.scss'
 
 const config = {
