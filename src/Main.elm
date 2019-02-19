@@ -160,7 +160,7 @@ update msg model =
             ( model, generateBudgetChart () )
 
         ChangeTab tab ->
-            ( { model | tab = tab }, Cmd.none )
+            ( { model | tab = tab }, generateBudgetChart () )
 
 
 
