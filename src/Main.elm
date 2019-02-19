@@ -217,37 +217,7 @@ view model =
                     [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
                 ]
             ]
-        , section [ class "section" ]
-            [ div [ class "container" ]
-                [ div [ class "field has-addons" ]
-                    [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput DoneInput ] [] ]
-                    , div [ class "control" ]
-                        [ button
-                            [ class
-                                ((\busy ->
-                                    if busy == True then
-                                        "button is-info is-loading"
-
-                                    else
-                                        "button is-info"
-                                 )
-                                    model.spendBusy
-                                )
-                            , onClick (PutSpendItem model.spendInput)
-                            ]
-                            [ text "登録" ]
-                        ]
-                    ]
-                ]
-            ]
-        , section [ class "section" ]
-            [ div [ class "container" ]
-                (spendItemCards
-                    model.spendItems
-                    DeleteSpendItem
-                )
-            ]
+        , spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
         ]
 
 
