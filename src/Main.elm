@@ -47,13 +47,18 @@ type alias Me =
     { uid : String, idToken : String }
 
 
+type Tab
+    = Spend
+    | Budget
+
+
 type alias Model =
-    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem, spendBusy : Bool }
+    { spendInput : String, me : Me, status : Status, spendItems : List SpendItem, spendBusy : Bool, tab : Tab }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False, auth () )
+    ( Model "" (Me "" "") Loading [] False Spend, auth () )
 
 
 
@@ -215,6 +220,12 @@ view model =
                     , onClick Login
                     ]
                     [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
+                ]
+            ]
+        , div [ class "tabs" ]
+            [ ul []
+                [ li [ class "is-active" ] [ a [] [ text "支出" ] ]
+                , li [] [ a [] [ text "予算" ] ]
                 ]
             ]
         , spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
