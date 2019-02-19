@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import moment from 'moment'
 import express, * as Express from 'express'
 import cors from 'cors'
 
@@ -66,7 +65,7 @@ spendItemsApp.post(
       .add({
         price: Number(price),
         userUid: me.uid,
-        createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+        createdAt: new Date(),
       })
       .catch(error => {
         console.error(error)
@@ -121,7 +120,7 @@ exports.createUserDocument = functions.auth.user().onCreate(async user => {
     .doc(user.uid)
     .set({
       budgetPrice: 0,
-      createdAt: moment().format('YYYY/MM/DD HH:mm:ss'),
+      createdAt: new Date(),
     })
     .catch(error => {
       console.error(error)
