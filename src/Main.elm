@@ -27,7 +27,6 @@ type Msg
     | DonePutSpendItem (Result Http.Error String)
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)
-    | GenerateBudgetChart
     | ChangeTab Tab
 
 
@@ -155,9 +154,6 @@ update msg model =
               }
             , Cmd.none
             )
-
-        GenerateBudgetChart ->
-            ( model, generateBudgetChart () )
 
         ChangeTab tab ->
             ( { model | tab = tab }, generateBudgetChart () )
@@ -355,5 +351,5 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
 
 budgetView : Int -> Int -> Html msg
 budgetView budgetPrice spendSumPrice =
-    div []
+    div [ class "container" ]
         [ canvas [ id "myChart" ] [] ]

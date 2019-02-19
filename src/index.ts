@@ -83,18 +83,15 @@ app.ports.generateBudgetChart.subscribe(async () => {
   }
 
   new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
+    type: 'bar',
 
-    // The data for our dataset
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['予算', '支出'],
       datasets: [
         {
-          label: 'My First dataset',
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: [0, 10, 5, 2, 20, 30, 45],
+          label: '予算',
+          backgroundColor: ['blue', 'red'],
+          data: [10, 10],
         },
       ],
     },
