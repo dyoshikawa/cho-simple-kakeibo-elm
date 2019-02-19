@@ -27,6 +27,7 @@ type Msg
     | DonePutSpendItem (Result Http.Error String)
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)
+    | GenerateBudgetChart
 
 
 type Status
@@ -153,6 +154,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        GenerateBudgetChart ->
+            ( model, generateBudgetChart () )
 
 
 
