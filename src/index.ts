@@ -82,7 +82,7 @@ app.ports.generateBudgetChart.subscribe(async () => {
     return
   }
 
-  const chart = new Chart(ctx, {
+  new Chart(ctx, {
     // The type of chart we want to create
     type: 'line',
 
