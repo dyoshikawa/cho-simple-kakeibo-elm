@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import express, * as Express from 'express'
 import cors from 'cors'
+import { user } from 'firebase-functions/lib/providers/auth'
 
 admin.initializeApp()
 
@@ -88,14 +89,16 @@ spendItemsApp.delete(
 
     const db = admin.firestore()
     const docRef = db.collection('items').doc(req.params.id)
+    const userDocRef = db.collection('users').doc(me.uid)
 
     const doc = await docRef.get()
     console.log(`doc ${doc.id}`)
-    if (!doc.exists) return res.send('Invalid doc id.')
+    if (!doc.exists) return res.status(422).send('Invalid doc id.')
     const data = doc.data()
-    if (data == null) return res.send('Invalid doc id.')
-    console.log(`data: ${data.userUid}`)
-    if (data.userUid != me.uid) return res.send('Invalid doc id.')
+    if (data == null) return res.status(422).send('Invalid doc id.')
+    console.log(`data: ${data.userId}`)
+    if (!userDocRef.isEqual(data.userId))
+      return res.status(401).send('Unauthenticated.')
 
     await db
       .collection('items')
