@@ -84,6 +84,8 @@ app.ports.generateBudgetChart.subscribe(
       return
     }
 
+    ctx.clearRect(0, 0, el.width, el.height)
+
     new Chart(ctx, {
       type: 'bar',
 
@@ -112,3 +114,13 @@ app.ports.generateBudgetChart.subscribe(
     })
   }
 )
+
+app.ports.removeBudgetChart.subscribe(() => {
+  console.log('removeBudgetChart')
+  const el = document.getElementById('myChart') as HTMLCanvasElement
+  const ctx = el.getContext('2d')
+  if (ctx == null) {
+    return
+  }
+  ctx.clearRect(0, 0, el.width, el.height)
+})

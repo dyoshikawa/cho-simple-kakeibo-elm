@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, generateBudgetChart, login, main, putSpend, resetSpendInputValue, update)
+port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, generateBudgetChart, login, main, putSpend, removeBudgetChart, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -28,7 +28,8 @@ type Msg
     | DonePutSpendItem (Result Http.Error String)
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)
-    | ChangeTab Tab
+    | ChangeTabSpend
+    | ChangeTabBudget
 
 
 type Status
@@ -177,8 +178,13 @@ update msg model =
             , Cmd.none
             )
 
-        ChangeTab tab ->
-            ( { model | tab = tab }
+        ChangeTabSpend ->
+            ( { model | tab = SpendTab }
+            , removeBudgetChart ()
+            )
+
+        ChangeTabBudget ->
+            ( { model | tab = BudgetTab }
             , generateBudgetChart model.generateBudgetChartData
             )
 
@@ -203,6 +209,9 @@ port resetSpendInputValue : () -> Cmd msg
 
 
 port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
+
+
+port removeBudgetChart : () -> Cmd msg
 
 
 
@@ -270,7 +279,7 @@ view model =
                              )
                                 model.tab
                             )
-                        , onClick (ChangeTab SpendTab)
+                        , onClick ChangeTabSpend
                         ]
                         [ a [] [ text "支出" ] ]
                     , li
@@ -284,7 +293,7 @@ view model =
                              )
                                 model.tab
                             )
-                        , onClick (ChangeTab BudgetTab)
+                        , onClick ChangeTabBudget
                         ]
                         [ a [] [ text "予算" ] ]
                     ]
