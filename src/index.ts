@@ -1,8 +1,8 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { Chart } from 'chart.js'
 import 'bulma'
-// import './sass/style.scss'
 import 'material-icons/iconfont/material-icons.scss'
 
 const config = {
@@ -71,4 +71,33 @@ app.ports.resetSpendInputValue.subscribe(async () => {
   console.log('putSpendInputValue')
   const el = document.querySelector('#spendInput') as HTMLInputElement
   el.value = ''
+})
+
+app.ports.generateBudgetChart.subscribe(() => {
+  const el = document.getElementById('myChart') as HTMLCanvasElement
+  const ctx = el.getContext('2d')
+  if (ctx == null) {
+    return
+  }
+
+  const chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label: 'My First dataset',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: [0, 10, 5, 2, 20, 30, 45],
+        },
+      ],
+    },
+
+    // Configuration options go here
+    options: {},
+  })
 })

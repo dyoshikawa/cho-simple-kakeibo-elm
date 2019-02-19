@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, main, putSpend, resetSpendInputValue, update)
+port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, generateBudgetChart, login, main, putSpend, resetSpendInputValue, update)
 
 import Browser
 import Html exposing (..)
@@ -174,6 +174,9 @@ port fetchSpendItems : String -> Cmd msg
 port resetSpendInputValue : () -> Cmd msg
 
 
+port generateBudgetChart : () -> Cmd msg
+
+
 
 -- Subscription
 
@@ -343,4 +346,4 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
 budgetView : Int -> Int -> Html msg
 budgetView budgetPrice spendSumPrice =
     div []
-        []
+        [ canvas [ id "myChart" ] [] ]
