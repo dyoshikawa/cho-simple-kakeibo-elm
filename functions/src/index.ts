@@ -60,19 +60,18 @@ spendItemsApp.post(
     console.log(`price: ${price}`)
 
     const db = admin.firestore()
-    const docRef = await db
+    const userDocRef = await db.collection('users').doc(me.uid)
+    await db
       .collection('items')
       .add({
         price: Number(price),
-        userUid: me.uid,
+        userId: userDocRef,
         createdAt: new Date(),
       })
       .catch(error => {
         console.error(error)
         return res.status(500).send({ errors: ['Failed to put data.'] })
       })
-
-    console.log(`docRef: ${docRef}`)
 
     return res.status(200).send({ message: 'Success.' })
   }
