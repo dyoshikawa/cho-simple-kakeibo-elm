@@ -21,6 +21,7 @@ type Msg
     = DoneInput String
     | Login
     | FetchedMe Me
+    | CheckedAuth ()
     | FetchSpendItems String
     | FetchedSpendItems (List SpendItem)
     | PutSpendItem String
@@ -104,6 +105,9 @@ update msg model =
 
         Login ->
             ( { model | spendInput = "" }, login () )
+
+        CheckedAuth () ->
+            ( { model | status = Loggedin }, Cmd.none )
 
         FetchedMe me ->
             let
@@ -202,10 +206,13 @@ port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ fetchedMe FetchedMe, fetchedSpendItems FetchedSpendItems ]
+    Sub.batch [ fetchedMe FetchedMe, fetchedSpendItems FetchedSpendItems, checkedAuth CheckedAuth ]
 
 
 port fetchedMe : (Me -> msg) -> Sub msg
+
+
+port checkedAuth : (() -> msg) -> Sub msg
 
 
 port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg

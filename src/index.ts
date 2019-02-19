@@ -34,6 +34,7 @@ app.ports.auth.subscribe(() => {
       console.log(idToken)
       app.ports.fetchedMe.send({ uid: user.uid, idToken: idToken })
     } else {
+      app.ports.checkedAuth.send(null)
       console.log('You are guest.')
     }
   })
