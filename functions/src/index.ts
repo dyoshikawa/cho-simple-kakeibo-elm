@@ -2,7 +2,6 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import express, * as Express from 'express'
 import cors from 'cors'
-import { user } from 'firebase-functions/lib/providers/auth'
 
 admin.initializeApp()
 
