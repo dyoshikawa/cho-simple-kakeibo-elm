@@ -403,7 +403,7 @@ budgetView generateBudgetChartData budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , canvas [ id "myChart" ] []
+                , div [] []
                 ]
             ]
         ]
