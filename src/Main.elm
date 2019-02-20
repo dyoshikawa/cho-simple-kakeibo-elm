@@ -8,6 +8,7 @@ port module Main exposing
     , login
     , main
     , putSpend
+    , removeBudgetChart
     , resetSpendInputValue
     , update
     )
@@ -192,7 +193,7 @@ update msg model =
 
         ChangeTabSpend ->
             ( { model | tab = SpendTab }
-            , Cmd.none
+            , removeBudgetChart ()
             )
 
         ChangeTabBudget ->
@@ -220,6 +221,12 @@ port fetchSpendItems : String -> Cmd msg
 port resetSpendInputValue : () -> Cmd msg
 
 
+port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
+
+
+port removeBudgetChart : () -> Cmd msg
+
+
 
 -- Subscription
 
@@ -236,9 +243,6 @@ port checkedAuth : (() -> msg) -> Sub msg
 
 
 port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
-
-
-port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
 
 
 
