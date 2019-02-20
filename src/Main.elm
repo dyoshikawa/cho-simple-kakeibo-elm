@@ -1,4 +1,16 @@
-port module Main exposing (Msg(..), auth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, main, putSpend, resetSpendInputValue, update)
+port module Main exposing
+    ( Msg(..)
+    , auth
+    , fetchSpendItems
+    , fetchedMe
+    , fetchedSpendItems
+    , generateBudgetChart
+    , login
+    , main
+    , putSpend
+    , resetSpendInputValue
+    , update
+    )
 
 import Browser
 import Html exposing (..)
@@ -185,7 +197,7 @@ update msg model =
 
         ChangeTabBudget ->
             ( { model | tab = BudgetTab }
-            , Cmd.none
+            , generateBudgetChart (GenerateBudgetChartData 100 100)
             )
 
 
@@ -224,6 +236,9 @@ port checkedAuth : (() -> msg) -> Sub msg
 
 
 port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
+
+
+port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
 
 
 
@@ -403,7 +418,7 @@ budgetView generateBudgetChartData budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , div [] []
+                , canvas [ id "myChart" ] []
                 ]
             ]
         ]

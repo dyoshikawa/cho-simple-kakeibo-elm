@@ -3,7 +3,7 @@
     "fmt": "elm-format . --yes",
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
-    "clean": "rm -rf .cache dist",
+    "clean": "rm -rf .cache dist elm-stuff",
     "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
