@@ -400,7 +400,7 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
 
 budgetView : GenerateBudgetChartData -> BudgetInput -> Html msg
 budgetView generateBudgetChartData budgetInput =
-    div []
+    div [ id "test" ]
         [ section [ class "section" ]
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]

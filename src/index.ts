@@ -121,8 +121,9 @@ app.ports.generateBudgetChart.subscribe(
 )
 
 app.ports.removeBudgetChart.subscribe(() => {
+  console.log('removeBudgetChart')
   const el = document.getElementById('myChart') as HTMLCanvasElement
   if (el.parentNode != null) {
-    el.parentNode.removeChild(el)
+    // el.parentNode.removeChild(el)
   }
 })
