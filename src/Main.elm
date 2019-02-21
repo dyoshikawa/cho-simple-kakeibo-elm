@@ -4,15 +4,14 @@ port module Main exposing
     , fetchSpendItems
     , fetchedMe
     , fetchedSpendItems
-    , generateBudgetChart
     , login
     , main
     , putSpend
-    , removeBudgetChart
     , resetSpendInputValue
     , update
     )
 
+import BarChart exposing (Data, view)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -193,12 +192,12 @@ update msg model =
 
         ChangeTabSpend ->
             ( { model | tab = SpendTab }
-            , removeBudgetChart ()
+            , Cmd.none
             )
 
         ChangeTabBudget ->
             ( { model | tab = BudgetTab }
-            , generateBudgetChart (GenerateBudgetChartData 100 100)
+            , Cmd.none
             )
 
 
@@ -219,12 +218,6 @@ port fetchSpendItems : String -> Cmd msg
 
 
 port resetSpendInputValue : () -> Cmd msg
-
-
-port generateBudgetChart : GenerateBudgetChartData -> Cmd msg
-
-
-port removeBudgetChart : () -> Cmd msg
 
 
 
@@ -422,7 +415,7 @@ budgetView generateBudgetChartData budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , canvas [ id "myChart" ] []
+                , BarChart.view (BarChart.Data 10 10)
                 ]
             ]
         ]
