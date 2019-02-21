@@ -415,7 +415,7 @@ budgetView generateBudgetChartData budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , BarChart.view (BarChart.Data 10 10)
+                , BarChart.view (BarChart.Data 10 3)
                 ]
             ]
         ]
