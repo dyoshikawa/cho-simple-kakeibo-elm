@@ -11,7 +11,6 @@ port module Main exposing
     , update
     )
 
-import BarChart exposing (Data, view)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,6 +18,8 @@ import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode exposing (Decoder, field, map2)
 import Json.Encode exposing (encode, int, object, string)
+import View.BarChart exposing (Data, view)
+import View.Button exposing (loadingLoginButton, loginButton, logoutButton)
 
 
 main =
@@ -120,7 +121,7 @@ update msg model =
             ( { model | spendInput = "" }, login () )
 
         CheckedAuth () ->
-            ( { model | status = Loggedin }, Cmd.none )
+            ( { model | status = NotLoggedin }, Cmd.none )
 
         FetchedMe me ->
             let
@@ -237,6 +238,7 @@ port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
 -- VIEW
 
 
+view : Model -> Html Msg
 view model =
     div []
         [ section [ class "hero is-info" ]
@@ -250,20 +252,15 @@ view model =
                 [ h2
                     [ class "subtitle" ]
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
-                , button
-                    [ class
-                        ((\status ->
-                            if status == Loading then
-                                "button is-info is-loading"
+                , case model.status of
+                    Loading ->
+                        loadingLoginButton
 
-                            else
-                                "button is-info"
-                         )
-                            model.status
-                        )
-                    , onClick Login
-                    ]
-                    [ i [ class "fa-google fab" ] [], text "Googleログイン" ]
+                    Loggedin ->
+                        logoutButton
+
+                    NotLoggedin ->
+                        loginButton Login
                 ]
             ]
         , div [ class "container" ]
@@ -410,7 +407,7 @@ budgetView budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , BarChart.view (BarChart.Data 1000 3)
+                , View.BarChart.view (View.BarChart.Data 1000 3)
                 ]
             ]
         ]
