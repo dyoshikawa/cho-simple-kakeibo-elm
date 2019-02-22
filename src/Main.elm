@@ -54,10 +54,6 @@ type alias PutSpendData =
     { uid : String, spend : String }
 
 
-type alias GenerateBudgetChartData =
-    { budget : Int, spendSum : Int }
-
-
 type alias SpendItem =
     { id : String, price : Int, createdAt : String, busy : Bool }
 
@@ -82,14 +78,13 @@ type alias Model =
     , spendItems : List SpendItem
     , spendBusy : Bool
     , tab : Tab
-    , generateBudgetChartData : GenerateBudgetChartData
     , budgetInput : BudgetInput
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False SpendTab (GenerateBudgetChartData 0 0) (BudgetInput "" False)
+    ( Model "" (Me "" "") Loading [] False SpendTab (BudgetInput "" False)
     , auth ()
     )
 
@@ -310,7 +305,7 @@ view model =
                 spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
 
             else
-                budgetView (GenerateBudgetChartData 100 50) (BudgetInput "" False)
+                budgetView (BudgetInput "" False)
           )
             model.tab
         ]
@@ -391,9 +386,9 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
         ]
 
 
-budgetView : GenerateBudgetChartData -> BudgetInput -> Html msg
-budgetView generateBudgetChartData budgetInput =
-    div [ id "test" ]
+budgetView : BudgetInput -> Html msg
+budgetView budgetInput =
+    div []
         [ section [ class "section" ]
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
@@ -415,7 +410,7 @@ budgetView generateBudgetChartData budgetInput =
                             [ text "登録" ]
                         ]
                     ]
-                , BarChart.view (BarChart.Data 10 3)
+                , BarChart.view (BarChart.Data 1000 3)
                 ]
             ]
         ]
