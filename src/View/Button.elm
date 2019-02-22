@@ -19,8 +19,8 @@ loginButton login =
         [ text "Googleログイン" ]
 
 
-logoutButton : Html msg
-logoutButton =
+logoutButton : msg -> Html msg
+logoutButton logout =
     button
-        [ class "button is-danger" ]
+        [ class "button is-danger", onClick logout ]
         [ text "ログアウト" ]

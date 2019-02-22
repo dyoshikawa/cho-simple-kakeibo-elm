@@ -265,7 +265,7 @@ view model =
                         loadingLoginButton
 
                     Loggedin ->
-                        logoutButton
+                        logoutButton Logout
 
                     NotLoggedin ->
                         loginButton Login
