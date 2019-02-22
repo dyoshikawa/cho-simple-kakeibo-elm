@@ -27,6 +27,11 @@ app.ports.login.subscribe(() => {
   firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
 })
 
+app.ports.logout.subscribe(() => {
+  console.log('logout')
+  firebase.auth().signOut()
+})
+
 app.ports.auth.subscribe(() => {
   firebase.auth().onAuthStateChanged(async user => {
     if (user) {
@@ -79,51 +84,4 @@ app.ports.resetSpendInputValue.subscribe(async () => {
   console.log('putSpendInputValue')
   const el = document.querySelector('#spendInput') as HTMLInputElement
   el.value = ''
-})
-
-app.ports.generateBudgetChart.subscribe(
-  async (data: { budget: number; spendSum: number }) => {
-    console.log('generateBudgetChart')
-    await new Promise(resolve => setTimeout(resolve, 100))
-    const el = document.getElementById('myChart') as HTMLCanvasElement
-    const ctx = el.getContext('2d')
-    if (ctx == null) {
-      return
-    }
-
-    new Chart(ctx, {
-      type: 'bar',
-
-      data: {
-        labels: ['予算', '支出'],
-        datasets: [
-          {
-            label: '予算',
-            backgroundColor: ['blue', 'red'],
-            data: [data.budget, data.spendSum],
-          },
-        ],
-      },
-
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      },
-    })
-  }
-)
-
-app.ports.removeBudgetChart.subscribe(() => {
-  console.log('removeBudgetChart')
-  const el = document.getElementById('myChart') as HTMLCanvasElement
-  if (el.parentNode != null) {
-    // el.parentNode.removeChild(el)
-  }
 })

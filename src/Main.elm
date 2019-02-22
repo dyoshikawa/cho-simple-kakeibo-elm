@@ -5,6 +5,7 @@ port module Main exposing
     , fetchedMe
     , fetchedSpendItems
     , login
+    , logout
     , main
     , putSpend
     , resetSpendInputValue
@@ -33,6 +34,7 @@ main =
 type Msg
     = DoneInput String
     | Login
+    | Logout
     | FetchedMe Me
     | CheckedAuth ()
     | FetchSpendItems String
@@ -119,6 +121,9 @@ update msg model =
 
         Login ->
             ( { model | spendInput = "" }, login () )
+
+        Logout ->
+            ( { model | status = NotLoggedin }, logout () )
 
         CheckedAuth () ->
             ( { model | status = NotLoggedin }, Cmd.none )
@@ -214,6 +219,9 @@ port fetchSpendItems : String -> Cmd msg
 
 
 port resetSpendInputValue : () -> Cmd msg
+
+
+port logout : () -> Cmd msg
 
 
 
