@@ -19,8 +19,9 @@ import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode exposing (Decoder, field, map2)
 import Json.Encode exposing (encode, int, object, string)
-import View.BarChart exposing (Data, view)
+import View.BudgetView exposing (budgetView)
 import View.Button exposing (loadingLoginButton, loginButton, logoutButton)
+import View.SpendView exposing (spendView)
 
 
 main =
@@ -324,103 +325,3 @@ view model =
 viewInput : String -> String -> String -> (String -> msg) -> Html msg
 viewInput t p v toMsg =
     input [ type_ t, placeholder p, value v, onInput toMsg ] []
-
-
-spendItemCards : List SpendItem -> (SpendItem -> msg) -> List (Html msg)
-spendItemCards items msgDeletingItem =
-    List.map
-        (\item ->
-            div
-                [ class "card" ]
-                [ div [ class "card-content" ]
-                    [ div [ class "content" ]
-                        [ div []
-                            [ p [ class "title" ] [ text (String.fromInt item.price ++ "円") ]
-                            , p [ class "subtitle" ] [ text item.createdAt ]
-                            , button
-                                [ class
-                                    ((\busy ->
-                                        if busy == True then
-                                            "button is-danger is-loading"
-
-                                        else
-                                            "button is-danger"
-                                     )
-                                        item.busy
-                                    )
-                                , onClick (msgDeletingItem item)
-                                ]
-                                [ i [ class "material-icons" ] [ text "delete" ] ]
-                            ]
-                        ]
-                    ]
-                ]
-        )
-        items
-
-
-spendView : String -> Bool -> List SpendItem -> (String -> msg) -> (String -> msg) -> (SpendItem -> msg) -> Html msg
-spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem =
-    div []
-        [ section [ class "section" ]
-            [ div [ class "container" ]
-                [ div [ class "field has-addons" ]
-                    [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput doneInput ] [] ]
-                    , div [ class "control" ]
-                        [ button
-                            [ class
-                                ((\busy ->
-                                    if busy == True then
-                                        "button is-info is-loading"
-
-                                    else
-                                        "button is-info"
-                                 )
-                                    spendBusy
-                                )
-                            , onClick (putSpendItem spendInput)
-                            ]
-                            [ text "登録" ]
-                        ]
-                    ]
-                ]
-            ]
-        , section [ class "section" ]
-            [ div [ class "container" ]
-                (spendItemCards
-                    spendItems
-                    deleteSpendItem
-                )
-            ]
-        ]
-
-
-budgetView : BudgetInput -> Html msg
-budgetView budgetInput =
-    div []
-        [ section [ class "section" ]
-            [ div [ class "container" ]
-                [ div [ class "field has-addons" ]
-                    [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "予算金額" ] [] ]
-                    , div [ class "control" ]
-                        [ button
-                            [ class
-                                ((\busy ->
-                                    if busy == True then
-                                        "button is-info is-loading"
-
-                                    else
-                                        "button is-info"
-                                 )
-                                    budgetInput.busy
-                                )
-                            ]
-                            [ text "登録" ]
-                        ]
-                    ]
-                , View.BarChart.view (View.BarChart.Data 1000 3)
-                ]
-            ]
-        ]

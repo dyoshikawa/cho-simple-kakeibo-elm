@@ -1,4 +1,4 @@
-module View.BarChart exposing (Data, view)
+module View.BarChart exposing (Data, barChart)
 
 import Html exposing (..)
 import Html.Events exposing (..)
@@ -23,8 +23,8 @@ spendY budget spend =
         |> (\a -> 95.0 - a)
 
 
-view : Data -> Html msg
-view data =
+barChart : Data -> Html msg
+barChart data =
     svg [ width "100%", height "100vh", viewBox "0 0 120 120", stroke "grey" ]
         [ rect
             [ x "20"

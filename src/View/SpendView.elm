@@ -44,3 +44,36 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
                 )
             ]
         ]
+
+
+spendItemCards : List SpendItem -> (SpendItem -> msg) -> List (Html msg)
+spendItemCards items msgDeletingItem =
+    List.map
+        (\item ->
+            div
+                [ class "card" ]
+                [ div [ class "card-content" ]
+                    [ div [ class "content" ]
+                        [ div []
+                            [ p [ class "title" ] [ text (String.fromInt item.price ++ "円") ]
+                            , p [ class "subtitle" ] [ text item.createdAt ]
+                            , button
+                                [ class
+                                    ((\busy ->
+                                        if busy == True then
+                                            "button is-danger is-loading"
+
+                                        else
+                                            "button is-danger"
+                                     )
+                                        item.busy
+                                    )
+                                , onClick (msgDeletingItem item)
+                                ]
+                                [ i [ class "material-icons" ] [ text "delete" ] ]
+                            ]
+                        ]
+                    ]
+                ]
+        )
+        items
