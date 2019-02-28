@@ -262,7 +262,9 @@ view model =
                     [ text "煩わしい入力項目のない超シンプルな家計簿です。" ]
                 , case model.status of
                     Loading ->
-                        loadingLoginButton
+                        div
+                            [ class "pageloader is-active is-info" ]
+                            [ span [ class "title" ] [ text "Loading..." ] ]
 
                     Loggedin ->
                         logoutButton Logout
@@ -301,7 +303,10 @@ view model =
                             )
                         , onClick ChangeTabBudget
                         ]
-                        [ a [] [ text "予算" ] ]
+                        [ a
+                            []
+                            [ text "予算" ]
+                        ]
                     ]
                 ]
             ]

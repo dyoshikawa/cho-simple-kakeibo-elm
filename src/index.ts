@@ -1,10 +1,11 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { Chart } from 'chart.js'
-import 'bulma'
-import 'material-icons/iconfont/material-icons.scss'
 import moment from 'moment'
+
+import 'bulma'
+import 'bulma-pageloader'
+import 'material-icons/iconfont/material-icons.scss'
 
 const config = {
   apiKey: 'AIzaSyBsJBMFYIR_kN9dC1rdoLhRz41Xehe3aUo',

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "fmt": "elm-format . --yes",
-    "start": "parcel src/index.html --open",
+    "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
     "clean": "rm -rf .cache dist elm-stuff",
     "deploy": "yarn build && firebase deploy"
@@ -9,6 +9,7 @@
   "dependencies": {
     "autoprefixer": "^9.4.7",
     "bulma": "^0.7.4",
+    "bulma-extensions": "^6.2.0",
     "bulma-pageloader": "^2.1.0",
     "chart.js": "^2.7.3",
     "elm": "^0.19.0-bugfix6",
