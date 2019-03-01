@@ -88,7 +88,7 @@ app.ports.resetSpendInputValue.subscribe(async () => {
 })
 
 app.ports.putSpendItem.subscribe(
-  async (putData: { uid: string; price: string }) => {
+  async (putData: { uid: string; price: number }) => {
     console.log('putSpendItem')
     const db = firebase.firestore()
     const userDocRef = await db.collection('users').doc(putData.uid)
