@@ -86,3 +86,31 @@ app.ports.resetSpendInputValue.subscribe(async () => {
   const el = document.querySelector('#spendInput') as HTMLInputElement
   el.value = ''
 })
+
+app.ports.putSpendItem.subscribe(async (uid: string, price: number) => {
+  console.log('putSpendItem')
+  const db = firebase.firestore()
+  const userDocRef = await db.collection('users').doc(uid)
+  await db
+    .collection('items')
+    .add({
+      price: Number(price),
+      userId: userDocRef,
+      createdAt: new Date(),
+    })
+    .catch(error => {
+      console.error(error)
+    })
+})
+
+app.ports.deleteSpendItem.subscribe(async (id: string) => {
+  console.log('deleteSpendItem')
+  const db = firebase.firestore()
+  await db
+    .collection('items')
+    .doc(id)
+    .delete()
+    .catch(function(error) {
+      console.error('Error removing document: ', error)
+    })
+})
