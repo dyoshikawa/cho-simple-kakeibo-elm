@@ -11,10 +11,10 @@ import Model exposing (BudgetInput, Me, Model, Msg(..), PutSpendData, SpendItem,
 import Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, logout, putSpend, resetSpendInputValue)
 import Subscription exposing (subscriptions)
 import Update exposing (update)
-import View.BudgetView exposing (budgetView)
-import View.Button exposing (loadingLoginButton, loginButton, logoutButton)
-import View.Hero exposing (hero)
-import View.SpendView exposing (spendView)
+import Views.BudgetView exposing (budgetView)
+import Views.Button exposing (loadingLoginButton, loginButton, logoutButton)
+import Views.Hero exposing (hero)
+import Views.SpendView exposing (spendView)
 
 
 main =

@@ -1,9 +1,9 @@
-module View.BudgetView exposing (budgetView)
+module Views.BudgetView exposing (budgetView)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import View.BarChart exposing (Data, barChart)
+import Views.BarChart exposing (Data, barChart)
 
 
 type alias BudgetInput =

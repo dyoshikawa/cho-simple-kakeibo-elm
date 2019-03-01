@@ -1,4 +1,4 @@
-module View.BarChart exposing (Data, barChart)
+module Views.BarChart exposing (Data, barChart)
 
 import Html exposing (..)
 import Html.Events exposing (..)

@@ -1,4 +1,4 @@
-module View.Button exposing (loadingLoginButton, loginButton, logoutButton)
+module Views.Button exposing (loadingLoginButton, loginButton, logoutButton)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

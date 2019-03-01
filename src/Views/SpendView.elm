@@ -1,4 +1,4 @@
-module View.SpendView exposing (spendView)
+module Views.SpendView exposing (spendView)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

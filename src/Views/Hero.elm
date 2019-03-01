@@ -1,4 +1,4 @@
-module View.Hero exposing (hero)
+module Views.Hero exposing (hero)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
