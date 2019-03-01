@@ -1,14 +1,5 @@
-port module Main exposing
-    ( Msg(..)
-    , auth
-    , fetchSpendItems
-    , fetchedMe
-    , fetchedSpendItems
-    , login
-    , logout
-    , main
-    , putSpend
-    , resetSpendInputValue
+module Main exposing
+    ( main
     , update
     )
 
@@ -19,78 +10,17 @@ import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode exposing (Decoder, field, map2)
 import Json.Encode exposing (encode, int, object, string)
+import Model exposing (BudgetInput, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
+import Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, logout, putSpend, resetSpendInputValue)
+import Subscription exposing (subscriptions)
 import View.BudgetView exposing (budgetView)
 import View.Button exposing (loadingLoginButton, loginButton, logoutButton)
+import View.Hero exposing (hero)
 import View.SpendView exposing (spendView)
 
 
 main =
     Browser.element { init = init, subscriptions = subscriptions, update = update, view = view }
-
-
-
--- MODEL
-
-
-type Msg
-    = DoneInput String
-    | Login
-    | Logout
-    | FetchedMe Me
-    | CheckedAuth ()
-    | FetchSpendItems String
-    | FetchedSpendItems (List SpendItem)
-    | PutSpendItem String
-    | DonePutSpendItem (Result Http.Error String)
-    | DeleteSpendItem SpendItem
-    | DeletedSpendItem (Result Http.Error String)
-    | ChangeTabSpend
-    | ChangeTabBudget
-
-
-type Status
-    = Loggedin
-    | NotLoggedin
-    | Loading
-
-
-type alias PutSpendData =
-    { uid : String, spend : String }
-
-
-type alias SpendItem =
-    { id : String, price : Int, createdAt : String, busy : Bool }
-
-
-type alias BudgetInput =
-    { value : String, busy : Bool }
-
-
-type alias Me =
-    { uid : String, idToken : String }
-
-
-type Tab
-    = SpendTab
-    | BudgetTab
-
-
-type alias Model =
-    { spendInput : String
-    , me : Me
-    , status : Status
-    , spendItems : List SpendItem
-    , spendBusy : Bool
-    , tab : Tab
-    , budgetInput : BudgetInput
-    }
-
-
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( Model "" (Me "" "") Loading [] False SpendTab (BudgetInput "" False)
-    , auth ()
-    )
 
 
 
@@ -204,58 +134,13 @@ update msg model =
 
 
 
--- Port
-
-
-port auth : () -> Cmd msg
-
-
-port login : () -> Cmd msg
-
-
-port putSpend : PutSpendData -> Cmd msg
-
-
-port fetchSpendItems : String -> Cmd msg
-
-
-port resetSpendInputValue : () -> Cmd msg
-
-
-port logout : () -> Cmd msg
-
-
-
--- Subscription
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch [ fetchedMe FetchedMe, fetchedSpendItems FetchedSpendItems, checkedAuth CheckedAuth ]
-
-
-port fetchedMe : (Me -> msg) -> Sub msg
-
-
-port checkedAuth : (() -> msg) -> Sub msg
-
-
-port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
-
-
-
 -- VIEW
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ section [ class "hero is-info" ]
-            [ div [ class "hero-body" ]
-                [ div [ class "container" ]
-                    [ h1 [ class "title" ] [ text "超シンプル家計簿" ] ]
-                ]
-            ]
+        [ hero
         , section [ class "section" ]
             [ div [ class "container" ]
                 [ h2
