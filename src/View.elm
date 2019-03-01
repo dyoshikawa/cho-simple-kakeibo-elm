@@ -71,7 +71,14 @@ view model =
             ]
         , (\tab ->
             if tab == SpendTab then
-                spendView model.spendInput model.spendBusy model.spendItems DoneInput PutSpendItem DeleteSpendItem
+                spendView
+                    { spendInput = model.spendInput
+                    , spendItems = model.spendItems
+                    , putSpendItem = PutSpendItem
+                    , deleteSpendItem = DeleteSpendItem
+                    , uid = model.me.uid
+                    , doneInput = DoneInput
+                    }
 
             else
                 budgetView (BudgetInput "" False)

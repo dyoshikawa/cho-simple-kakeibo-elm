@@ -1,4 +1,16 @@
-port module Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, logout, putSpend, resetSpendInputValue)
+port module Port exposing
+    ( auth
+    , checkedAuth
+    , deleteSpendItem
+    , fetchSpendItems
+    , fetchedMe
+    , fetchedSpendItems
+    , login
+    , logout
+    , putSpend
+    , putSpendItem
+    , resetSpendInputValue
+    )
 
 
 type alias PutSpendData =
@@ -38,3 +50,9 @@ port checkedAuth : (() -> msg) -> Sub msg
 
 
 port fetchedSpendItems : (List SpendItem -> msg) -> Sub msg
+
+
+port putSpendItem : PutSpendData -> Cmd msg
+
+
+port deleteSpendItem : String -> Cmd msg

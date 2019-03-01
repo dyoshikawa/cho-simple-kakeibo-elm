@@ -12,7 +12,7 @@ type Msg
     | CheckedAuth ()
     | FetchSpendItems String
     | FetchedSpendItems (List SpendItem)
-    | PutSpendItem String
+    | PutSpendItem PutSpendData
     | DonePutSpendItem (Result Http.Error String)
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)

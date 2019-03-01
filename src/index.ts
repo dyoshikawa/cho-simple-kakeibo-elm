@@ -87,21 +87,23 @@ app.ports.resetSpendInputValue.subscribe(async () => {
   el.value = ''
 })
 
-app.ports.putSpendItem.subscribe(async (uid: string, price: number) => {
-  console.log('putSpendItem')
-  const db = firebase.firestore()
-  const userDocRef = await db.collection('users').doc(uid)
-  await db
-    .collection('items')
-    .add({
-      price: Number(price),
-      userId: userDocRef,
-      createdAt: new Date(),
-    })
-    .catch(error => {
-      console.error(error)
-    })
-})
+app.ports.putSpendItem.subscribe(
+  async (putData: { uid: string; price: string }) => {
+    console.log('putSpendItem')
+    const db = firebase.firestore()
+    const userDocRef = await db.collection('users').doc(putData.uid)
+    await db
+      .collection('items')
+      .add({
+        price: Number(putData.price),
+        userId: userDocRef,
+        createdAt: new Date(),
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+)
 
 app.ports.deleteSpendItem.subscribe(async (id: string) => {
   console.log('deleteSpendItem')

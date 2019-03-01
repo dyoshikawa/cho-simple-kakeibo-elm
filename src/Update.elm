@@ -13,18 +13,9 @@ update msg model =
         DoneInput value ->
             ( { model | spendInput = value }, Cmd.none )
 
-        PutSpendItem price ->
-            ( { model | spendBusy = True }
-            , Http.request
-                { method = "POST"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
-                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/"
-                , body = Http.jsonBody (object [ ( "price", string price ) ])
-                , expect = Http.expectString DonePutSpendItem
-                , timeout = Nothing
-                , tracker = Nothing
-                }
+        PutSpendItem data ->
+            ( model
+            , putSpendItem data
             )
 
         DonePutSpendItem _ ->
@@ -56,31 +47,8 @@ update msg model =
             ( { model | spendItems = items }, Cmd.none )
 
         DeleteSpendItem item ->
-            ( { model
-                | spendItems =
-                    (\items ->
-                        List.map
-                            (\item2 ->
-                                if item2.id == item.id then
-                                    { item2 | busy = True }
-
-                                else
-                                    item2
-                            )
-                            items
-                    )
-                        model.spendItems
-              }
-            , Http.request
-                { method = "DELETE"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ model.me.idToken) ]
-                , url = "https://us-central1-cho-simple-kakeibo-develop.cloudfunctions.net/spendItems/" ++ item.id
-                , body = Http.emptyBody
-                , expect = Http.expectString DeletedSpendItem
-                , timeout = Nothing
-                , tracker = Nothing
-                }
+            ( model
+            , deleteSpendItem item.id
             )
 
         DeletedSpendItem _ ->
