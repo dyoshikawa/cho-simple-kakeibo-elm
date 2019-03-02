@@ -116,3 +116,16 @@ app.ports.deleteSpendItem.subscribe(async (id: string) => {
       console.error('Error removing document: ', error)
     })
 })
+
+app.ports.updateUserBudget.subscribe(
+  async (updateData: { uid: string; budget: string }) => {
+    console.log('updateUserBudget')
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(updateData.uid)
+      .set({
+        budget: Number(updateData.budget),
+      })
+  }
+)

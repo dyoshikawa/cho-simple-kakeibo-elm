@@ -1,7 +1,19 @@
 module Model exposing (BudgetViewData, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
 
 import Http
-import Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, logout, putSpend, resetSpendInputValue)
+import Port
+    exposing
+        ( UpdateUserBudgetData
+        , auth
+        , checkedAuth
+        , fetchSpendItems
+        , fetchedMe
+        , fetchedSpendItems
+        , login
+        , logout
+        , putSpend
+        , resetSpendInputValue
+        )
 
 
 type Msg
@@ -14,6 +26,7 @@ type Msg
     | FetchSpendItems String
     | FetchedSpendItems (List SpendItem)
     | PutSpendItem PutSpendData
+    | UpdateUserBudget UpdateUserBudgetData
     | DonePutSpendItem (Result Http.Error String)
     | DeleteSpendItem SpendItem
     | DeletedSpendItem (Result Http.Error String)

@@ -21,6 +21,11 @@ update msg model =
             , putSpendItem data
             )
 
+        UpdateUserBudget data ->
+            ( model
+            , updateUserBudget data
+            )
+
         DonePutSpendItem _ ->
             ( { model | spendBusy = False, spendInput = "" }, resetSpendInputValue () )
 

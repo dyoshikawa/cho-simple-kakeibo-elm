@@ -1,5 +1,6 @@
 port module Port exposing
-    ( auth
+    ( UpdateUserBudgetData
+    , auth
     , checkedAuth
     , deleteSpendItem
     , fetchSpendItems
@@ -10,7 +11,12 @@ port module Port exposing
     , putSpend
     , putSpendItem
     , resetSpendInputValue
+    , updateUserBudget
     )
+
+
+type alias UpdateUserBudgetData =
+    { uid : String, budget : String }
 
 
 type alias PutSpendData =
@@ -56,3 +62,6 @@ port putSpendItem : PutSpendData -> Cmd msg
 
 
 port deleteSpendItem : String -> Cmd msg
+
+
+port updateUserBudget : UpdateUserBudgetData -> Cmd msg
