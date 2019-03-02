@@ -3,7 +3,7 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Model exposing (BudgetInput, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
+import Model exposing (BudgetViewData, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
 import Views.BudgetView exposing (budgetView)
 import Views.Button exposing (loadingLoginButton, loginButton, logoutButton)
 import Views.Hero exposing (hero)
@@ -81,7 +81,10 @@ view model =
                     }
 
             else
-                budgetView (BudgetInput "" False)
+                budgetView
+                    { budgetInput = model.budgetInput
+                    , doneBudgetInput = DoneInput
+                    }
           )
             model.tab
         ]

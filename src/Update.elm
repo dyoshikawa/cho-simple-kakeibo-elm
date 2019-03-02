@@ -13,6 +13,9 @@ update msg model =
         DoneInput value ->
             ( { model | spendInput = value }, Cmd.none )
 
+        DoneBudgetInput value ->
+            ( { model | budgetInput = value }, Cmd.none )
+
         PutSpendItem data ->
             ( model
             , putSpendItem data

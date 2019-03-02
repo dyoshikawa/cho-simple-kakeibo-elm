@@ -1,4 +1,4 @@
-module Model exposing (BudgetInput, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
+module Model exposing (BudgetViewData, Me, Model, Msg(..), PutSpendData, SpendItem, Status(..), Tab(..), init)
 
 import Http
 import Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpendItems, login, logout, putSpend, resetSpendInputValue)
@@ -6,6 +6,7 @@ import Port exposing (auth, checkedAuth, fetchSpendItems, fetchedMe, fetchedSpen
 
 type Msg
     = DoneInput String
+    | DoneBudgetInput String
     | Login
     | Logout
     | FetchedMe Me
@@ -34,8 +35,10 @@ type alias SpendItem =
     { id : String, price : Int, createdAt : String, busy : Bool }
 
 
-type alias BudgetInput =
-    { value : String, busy : Bool }
+type alias BudgetViewData msg =
+    { budgetInput : String
+    , doneBudgetInput : String -> msg
+    }
 
 
 type alias Me =
@@ -54,12 +57,12 @@ type alias Model =
     , spendItems : List SpendItem
     , spendBusy : Bool
     , tab : Tab
-    , budgetInput : BudgetInput
+    , budgetInput : String
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" (Me "" "") Loading [] False SpendTab (BudgetInput "" False)
+    ( Model "" (Me "" "") Loading [] False SpendTab ""
     , auth ()
     )
