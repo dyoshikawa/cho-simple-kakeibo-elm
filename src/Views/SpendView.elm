@@ -1,35 +1,33 @@
-module View.SpendView exposing (spendView)
+module Views.SpendView exposing (spendView)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Model exposing (..)
 
 
-type alias SpendItem =
-    { id : String, price : Int, createdAt : String, busy : Bool }
+type alias SpendViewData msg =
+    { uid : String
+    , spendInput : String
+    , spendItems : List SpendItem
+    , putSpendItem : PutSpendData -> msg
+    , deleteSpendItem : SpendItem -> msg
+    , doneInput : String -> msg
+    }
 
 
-spendView : String -> Bool -> List SpendItem -> (String -> msg) -> (String -> msg) -> (SpendItem -> msg) -> Html msg
-spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem =
+spendView : SpendViewData msg -> Html msg
+spendView args =
     div []
         [ section [ class "section" ]
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput doneInput ] [] ]
+                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput args.doneInput ] [] ]
                     , div [ class "control" ]
                         [ button
-                            [ class
-                                ((\busy ->
-                                    if busy == True then
-                                        "button is-info is-loading"
-
-                                    else
-                                        "button is-info"
-                                 )
-                                    spendBusy
-                                )
-                            , onClick (putSpendItem spendInput)
+                            [ class "button is-info"
+                            , onClick (args.putSpendItem { uid = args.uid, spend = args.spendInput })
                             ]
                             [ text "登録" ]
                         ]
@@ -39,8 +37,8 @@ spendView spendInput spendBusy spendItems doneInput putSpendItem deleteSpendItem
         , section [ class "section" ]
             [ div [ class "container" ]
                 (spendItemCards
-                    spendItems
-                    deleteSpendItem
+                    args.spendItems
+                    args.deleteSpendItem
                 )
             ]
         ]
