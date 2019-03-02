@@ -84,6 +84,8 @@ view model =
                 budgetView
                     { budgetInput = model.budgetInput
                     , doneBudgetInput = DoneBudgetInput
+                    , updateUserBudget = UpdateUserBudget
+                    , uid = model.me.uid
                     }
           )
             model.tab

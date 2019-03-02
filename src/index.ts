@@ -120,12 +120,19 @@ app.ports.deleteSpendItem.subscribe(async (id: string) => {
 app.ports.updateUserBudget.subscribe(
   async (updateData: { uid: string; budget: string }) => {
     console.log('updateUserBudget')
-    firebase
-      .firestore()
+    const db = firebase.firestore()
+    const user = await db
+      .collection('users')
+      .doc(updateData.uid)
+      .get()
+    await db
       .collection('users')
       .doc(updateData.uid)
       .set({
         budget: Number(updateData.budget),
+        createdAt: (user.data() as any).createdAt
+          ? (user.data() as any).createdAt
+          : new Date(),
       })
   }
 )

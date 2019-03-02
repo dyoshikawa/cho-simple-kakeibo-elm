@@ -51,6 +51,8 @@ type alias SpendItem =
 type alias BudgetViewData msg =
     { budgetInput : String
     , doneBudgetInput : String -> msg
+    , updateUserBudget : UpdateUserBudgetData -> msg
+    , uid : String
     }
 
 

@@ -120,7 +120,7 @@ exports.createUserDocument = functions.auth.user().onCreate(async user => {
     .collection('users')
     .doc(user.uid)
     .set({
-      budgetPrice: 0,
+      budget: 0,
       createdAt: new Date(),
     })
     .catch(error => {

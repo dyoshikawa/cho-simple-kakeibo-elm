@@ -25,7 +25,12 @@ budgetView budgetViewData =
                         ]
                     , div [ class "control" ]
                         [ button
-                            [ class "button is-info" ]
+                            [ class "button is-info"
+                            , onClick
+                                (budgetViewData.updateUserBudget
+                                    { uid = budgetViewData.uid, budget = budgetViewData.budgetInput }
+                                )
+                            ]
                             [ text "登録" ]
                         ]
                     ]
