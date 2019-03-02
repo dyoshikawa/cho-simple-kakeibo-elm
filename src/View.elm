@@ -83,7 +83,7 @@ view model =
             else
                 budgetView
                     { budgetInput = model.budgetInput
-                    , doneBudgetInput = DoneInput
+                    , doneBudgetInput = DoneBudgetInput
                     }
           )
             model.tab

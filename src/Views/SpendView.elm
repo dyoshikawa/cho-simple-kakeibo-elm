@@ -23,7 +23,16 @@ spendView args =
             [ div [ class "container" ]
                 [ div [ class "field has-addons" ]
                     [ div [ class "control" ]
-                        [ input [ id "spendInput", class "input", type_ "number", placeholder "支出金額", onInput args.doneInput ] [] ]
+                        [ input
+                            [ id "spendInput"
+                            , class "input"
+                            , type_ "number"
+                            , placeholder "支出金額"
+                            , value args.spendInput
+                            , onInput args.doneInput
+                            ]
+                            []
+                        ]
                     , div [ class "control" ]
                         [ button
                             [ class "button is-info"
